@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Agenda">
+<meta name="theme-color" content="#5b7fae">
+<title>Agenda d’Abdo</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f4f6fa; --surface: #ffffff; --text: #1d2433; --muted: #6b7486; --line: #e1e6ee;
+  --cours: #5b7fae; --etude: #5aa37a; --uber: #2f3646; --ecole: #d58a6a; --prive: #b58bb0; --warn: #c0392b; --today: #fff6d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #12151c; --surface: #1b1f29; --text: #e8ecf4; --muted: #98a2b6; --line: #2b3140;
+    --cours: #4a6a96; --etude: #3f8560; --uber: #3a4256; --ecole: #b86f50; --prive: #94709a; --today: #2c2a1c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #12151c; --surface: #1b1f29; --text: #e8ecf4; --muted: #98a2b6; --line: #2b3140;
+  --cours: #4a6a96; --etude: #3f8560; --uber: #3a4256; --ecole: #b86f50; --prive: #94709a; --today: #2c2a1c;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding: 16px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+h1 { font-size: 20px; margin: 0 0 4px; }
+.sub { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+#sync { font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.tab { border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+.tab.on { background: var(--cours); color: #fff; border-color: var(--cours); }
+.stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; font-size: 13px; }
+.chip { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.hint { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.cal { min-width: 720px; display: grid; grid-template-columns: 46px repeat(7, 1fr); }
+.head { font-weight: 600; font-size: 13px; text-align: center; padding: 8px 2px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.head.today { background: var(--today); }
+.head small { display: block; color: var(--muted); font-weight: 400; }
+.times { position: relative; height: 640px; }
+.times span { position: absolute; right: 6px; font-size: 11px; color: var(--muted); transform: translateY(-6px); }
+.col { position: relative; height: 640px; border-left: 1px solid var(--line);
+  background-image: linear-gradient(to bottom, var(--line) 1px, transparent 1px); background-size: 100% 40px; }
+.col.today { background-color: var(--today); }
+.ev { position: absolute; border-radius: 6px; padding: 3px 5px; font-size: 11px; line-height: 1.25; color: #fff; overflow: hidden; border: 1px solid rgba(0,0,0,.12); }
+.ev b { display: block; font-size: 11px; }
+.ev.cours { background: var(--cours); }
+.ev.etude { background: var(--etude); }
+.ev.uber { background: var(--uber); }
+.ev.ecole { background: var(--ecole); }
+.ev.prive { background: var(--prive); }
+.ev.warn { outline: 2px solid var(--warn); outline-offset: -2px; }
+.ev.click { cursor: pointer; padding-right: 22px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.ev.click:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+.ev .chk { position: absolute; top: 3px; right: 4px; width: 15px; height: 15px; border: 1.5px solid rgba(255,255,255,.95); border-radius: 4px; font-size: 11px; line-height: 12px; text-align: center; font-weight: 700; }
+.ev.done { opacity: .55; }
+.ev.done .chk { background: #fff; color: #222; }
+.track { margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+.track h2 { font-size: 15px; margin: 0 0 10px; }
+.trow { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
+.bar { height: 10px; background: var(--line); border-radius: 6px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--cours); transition: width .3s; }
+.bar i.done { background: var(--etude); }
+.tmsg { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.extra { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.extra input { width: 90px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); font-size: 14px; }
+.xpcard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }
+.xpcard .lvl { font-size: 15px; font-weight: 600; }
+.xpcard .bar { margin: 8px 0 4px; }
+.xpcard .bar i { background: #e0a526; }
+.mini { touch-action: manipulation; display: block; width: calc(100% - 8px); margin: 3px 4px 0; padding: 3px 2px; font-size: 10px; line-height: 1.2; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); cursor: pointer; font-weight: 500; }
+.mini.on { background: var(--etude); border-color: var(--etude); color: #fff; }
+.extra input[type=text] { width: 220px; max-width: 100%; }
+.note { margin-top: 12px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.sleep { margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.6; }
+.sleep h2 { font-size: 15px; margin: 0 0 6px; }
+@media (max-width: 520px) { .trow { grid-template-columns: 1fr; gap: 4px; } }
+</style>
+</head>
+<body>
+<div class="top">
+  <div>
+    <h1>Agenda d’Abdo</h1>
+    <div class="sub">Lever fixe à 7h · blocs d’étude aux mêmes heures chaque semaine</div>
+  </div>
+  <div id="sync">Connexion…</div>
+</div>
+<div class="xpcard" id="xp"></div>
+<div class="tabs" id="tabs"></div>
+<div class="stats" id="stats"></div>
+<div class="legend">
+  <span><i style="background:var(--cours)"></i>Cours</span>
+  <span><i style="background:var(--etude)"></i>Étude</span>
+  <span><i style="background:var(--uber)"></i>Uber Eats</span>
+  <span><i style="background:var(--ecole)"></i>École de devoirs</span>
+  <span><i style="background:var(--prive)"></i>Cours particulier</span>
+  <span><i style="background:transparent;border:2px solid var(--warn)"></i>Conflit</span>
+</div>
+<div class="hint">Touche un bloc d’étude ou un shift pour le cocher quand il est fait. Sous chaque jour, ☀️ pour le lever à 7h et 🌙 pour le coucher à l’heure.</div>
+<div class="wrap"><div class="cal" id="cal"></div></div>
+<div class="track" id="track"></div>
+<div class="note" id="note"></div>
+
+<div class="sleep">
+  <h2>Sommeil : descente par paliers (lever 7h)</h2>
+  Sam 17 → Dim 18 : coucher 2h30 · Dim → Lun : 2h00 · Lun → Mar : 1h30 · Mar → Mer : 1h00 · Mer → Jeu : 0h30 · Jeu → Ven : 0h00, puis minuit chaque soir.<br>
+  Lumière vive au réveil, pas d’écran 30 min avant de dormir, pas de caféine après 14h.
+</div>
+<div class="sleep">
+  <h2>Règles des XP</h2>
+  Bloc d’étude coché : <b>24 XP par heure</b> · Shift coché : <b>0,4 XP par euro</b> (Uber journée = 40 XP) · ☀️ Lever à 7h : <b>20 XP</b> · 🌙 Coucher à l’heure : <b>20 XP</b><br>
+  Bonus de la semaine : 5 levers sur 7 = <b>+50</b> · objectif d’étude atteint = <b>+100</b> · objectif d’argent atteint = <b>+100</b>
+</div>
+
+<script>
+var START = 7, END = 23, H = 40;
+var DAYS = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+var MONEY = { uber: 100, ecole: 20, prive: 50 };
+var MGOAL = 450;
+var CHECKABLE = { etude: 1, uber: 1, ecole: 1, prive: 1 };
+var WEEKS = [
+  { label: "Semaine A", start: new Date(2026, 9, 19), goal: 25,
+    note: "Pas d’école de devoirs cette semaine. Mercredi : je suppose que tu suis le CM Public policy." },
+  { label: "Semaine B", start: new Date(2026, 9, 26), goal: 35,
+    note: "Vacances : plus d’étude le matin, Uber Eats en soirée du lundi au jeudi (dès 17h30, dès 19h le mercredi après le cours particulier). Montants des soirées Uber estimés au prorata." },
+  { label: "Semaine C", start: new Date(2026, 10, 2), goal: 25,
+    note: "Mardi 3/11 : l’école de devoirs (16h30) chevauche la fin de Théorie des organisations. Vendredi 6/11 : CM Économétrie à 13h30 pendant Uber Eats, à décider." }
+];
+
+function E(d, s, e, type, title, sub, extra) {
+  var o = { d: d, s: s, e: e, t: type, title: title, sub: sub || "" };
+  if (extra) for (var k in extra) o[k] = extra[k];
+  return o;
+}
+function build(i) {
+  var ev = [], d;
+  if (i !== 1) {
+    ev.push(E(0, 14.5, 16.5, "cours", "CM Management et stratégie"));
+    ev.push(E(1, 10.5, 12.5, "cours", "CM Économétrie"), E(1, 13.5, 15.5, "cours", "TP Économétrie"),
+            E(1, 15.75, 17.75, "cours", "CM Théorie des organisations", "", i === 2 ? { l: 0, w: 0.5, warn: true } : null));
+    ev.push(E(2, 8.5, 10.5, "cours", "CM Public policy"));
+    ev.push(E(3, 10.5, 12.5, "cours", "CM Éthique et économie"), E(3, 13.5, 15.5, "cours", "CM Économétrie"));
+  }
+  ev.push(E(2, 17, 18.5, "prive", "Cours particulier", "17h – 18h30"));
+  if (i === 2) {
+    ev.push(E(1, 16.5, 18.25, "ecole", "École de devoirs", "16h30 – 18h15", { l: 0.5, w: 0.5, warn: true }));
+    ev.push(E(3, 16.5, 18.25, "ecole", "École de devoirs", "16h30 – 18h15"));
+  }
+  // Uber Eats + étude du week-end
+  for (d = 4; d <= 6; d++) {
+    ev.push(E(d, 7.5, 10, "etude", "Étude", "Bloc matin 7h30 – 10h"));
+    if (i === 2 && d === 4) {
+      ev.push(E(d, 11, 22, "uber", "Uber Eats", "11h – 22h", { l: 0, w: 0.5 }));
+      ev.push(E(d, 13.5, 15.5, "cours", "CM Économétrie (à décider)", "", { l: 0.5, w: 0.5, warn: true }));
+    } else {
+      ev.push(E(d, 11, 22, "uber", "Uber Eats", "11h – 22h"));
+    }
+  }
+  // Blocs d’étude fixes en semaine
+  if (i === 1) {
+    ev.push(E(0, 7.5, 14, "etude", "Étude", "Bloc lundi 7h30 – 14h"), E(0, 14, 17, "etude", "Étude", "Bloc après-midi 14h – 17h"));
+    ev.push(E(1, 7.5, 12.5, "etude", "Étude", "Bloc matin 7h30 – 12h30"), E(1, 14, 17, "etude", "Étude", "Bloc après-midi 14h – 17h"));
+    ev.push(E(2, 7.5, 16, "etude", "Étude", "Bloc mercredi 7h30 – 16h"));
+    ev.push(E(3, 7.5, 12.5, "etude", "Étude", "Bloc matin 7h30 – 12h30"), E(3, 14, 17, "etude", "Étude", "Bloc après-midi 14h – 17h"));
+    [0, 1, 3].forEach(function (x) { ev.push(E(x, 17.5, 22, "uber", "Uber Eats", "17h30 – 22h", { m: 40 })); });
+    ev.push(E(2, 19, 22, "uber", "Uber Eats", "19h – 22h", { m: 25 }));
+  } else {
+    ev.push(E(0, 7.5, 14, "etude", "Étude", "Bloc lundi 7h30 – 14h"));
+    ev.push(E(1, 7.5, 10, "etude", "Étude", "Bloc matin 7h30 – 10h"));
+    ev.push(E(2, 11, 16, "etude", "Étude", "Bloc mercredi 11h – 16h"));
+    ev.push(E(3, 7.5, 10, "etude", "Étude", "Bloc matin 7h30 – 10h"));
+    for (d = 0; d <= 3; d++) ev.push(E(d, 19.5, 21, "etude", "Étude", "Bloc soir 19h30 – 21h"));
+  }
+  return ev;
+}
+WEEKS.forEach(function (w, i) {
+  w.ev = build(i);
+  w.ev.forEach(function (e) { e.id = (i + "-" + e.d + "-" + e.s + "-" + e.t).replace(/\./g, "_"); });
+});
+
+function moneyOf(e) { return MONEY[e.t] ? (e.m !== undefined ? e.m : MONEY[e.t]) : 0; }
+function fmt(h) {
+  var hh = Math.floor(h), mm = Math.round((h - hh) * 60);
+  return hh + "h" + (mm ? (mm < 10 ? "0" + mm : mm) : "");
+}
+function num(x) { return Math.round(x * 10) / 10; }
+
+/* ---------- État + synchronisation ---------- */
+var LS_KEY = "abdoState2";
+function norm(p) {
+  p = p || {};
+  return { done: p.done || {}, extra: p.extra || {}, lever: p.lever || {}, coucher: p.coucher || {}, reward: p.reward || "", updated: p.updated || 0 };
+}
+var state = norm(null);
+try {
+  var raw = localStorage.getItem(LS_KEY);
+  if (raw) state = norm(JSON.parse(raw));
+} catch (e) {}
+function hasData() {
+  return Object.keys(state.done).length || Object.keys(state.extra).length ||
+    Object.keys(state.lever).length || Object.keys(state.coucher).length || state.reward;
+}
+function saveLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
+
+var ref = null, dirty = false, writing = false, timer = null;
+var SYNC_TXT = {
+  connecting: "Connexion…", ok: "☁️ Synchronisé", saving: "Synchronisation…",
+  local: "📱 Enregistré sur cet appareil", error: "⚠️ Erreur de synchronisation"
+};
+function setSync(k) { document.getElementById("sync").textContent = SYNC_TXT[k]; }
+function persist() {
+  state.updated = Date.now();
+  saveLocal();
+  if (!ref) return;
+  dirty = true; setSync("saving");
+  clearTimeout(timer);
+  timer = setTimeout(flush, 500);
+}
+async function flush() {
+  if (writing) { timer = setTimeout(flush, 300); return; }
+  writing = true; dirty = false;
+  try {
+    await ref.set({ done: state.done, extra: state.extra, lever: state.lever, coucher: state.coucher, reward: state.reward, updated: state.updated });
+    if (!dirty) setSync("ok");
+  } catch (e) { setSync("error"); }
+  writing = false;
+  if (dirty) timer = setTimeout(flush, 300);
+}
+function toggle(id) {
+  if (state.done[id]) delete state.done[id]; else state.done[id] = 1;
+  persist(); render();
+}
+function toggleDay(kind, key) {
+  var o = state[kind];
+  if (o[key]) delete o[key]; else o[key] = 1;
+  persist(); render();
+}
+
+/* ---------- Affichage ---------- */
+var cur = 0;
+(function pickWeek() {
+  var now = new Date();
+  for (var i = 0; i < WEEKS.length; i++) {
+    var end = new Date(WEEKS[i].start); end.setDate(end.getDate() + 7);
+    if (now < end) { cur = i; return; }
+  }
+  cur = WEEKS.length - 1;
+})();
+
+function totals(w, i) {
+  var t = { studyPossible: 0, studyDone: 0, moneyPossible: 0, moneyDone: 0, studyXP: 0, shiftXP: 0, lever: 0, coucher: 0 };
+  w.ev.forEach(function (e) {
+    var done = !!state.done[e.id];
+    if (e.t === "etude") {
+      t.studyPossible += e.e - e.s;
+      if (done) { t.studyDone += e.e - e.s; t.studyXP += Math.round((e.e - e.s) * 24); }
+    }
+    var m = moneyOf(e);
+    if (m) { t.moneyPossible += m; if (done) { t.moneyDone += m; t.shiftXP += Math.round(m * 0.4); } }
+  });
+  t.extra = parseFloat(state.extra[i]) || 0;
+  for (var d = 0; d < 7; d++) {
+    if (state.lever[i + "-" + d]) t.lever++;
+    if (state.coucher[i + "-" + d]) t.coucher++;
+  }
+  t.leverXP = t.lever * 20; t.coucherXP = t.coucher * 20;
+  t.bonus = (t.lever >= 5 ? 50 : 0) + (t.studyDone >= w.goal ? 100 : 0) + (t.moneyDone + t.extra >= MGOAL ? 100 : 0);
+  t.xp = t.studyXP + t.shiftXP + t.leverXP + t.coucherXP + t.bonus;
+  return t;
+}
+var LEVELS = [
+  { n: "Recrue", x: 0 }, { n: "Apprenti", x: 500 }, { n: "Studieux", x: 1200 }, { n: "Discipliné", x: 2200 },
+  { n: "Régulier", x: 3500 }, { n: "Expert", x: 5000 }, { n: "Maître", x: 7000 }, { n: "Légende", x: 9500 }
+];
+function totalXP() {
+  var sum = 0;
+  WEEKS.forEach(function (w, i) { sum += totals(w, i).xp; });
+  return sum;
+}
+function renderXP() {
+  var xp = totalXP(), l = 0, k;
+  for (k = 0; k < LEVELS.length; k++) if (xp >= LEVELS[k].x) l = k;
+  var cur0 = LEVELS[l].x, nxt = LEVELS[l + 1];
+  var pct = nxt ? (xp - cur0) / (nxt.x - cur0) * 100 : 100;
+  var html = '<div class="lvl">Niveau ' + (l + 1) + ' · ' + LEVELS[l].n + ' <span style="font-weight:400;color:var(--muted)">— ' + xp + ' XP au total</span></div>' +
+    '<div class="bar"><i style="width:' + Math.min(100, pct) + '%"></i></div>' +
+    '<div class="tmsg">' + (nxt ? 'Prochain niveau : ' + nxt.n + ' (reste ' + (nxt.x - xp) + ' XP)' : 'Niveau maximum atteint 🏆') + '</div>';
+  if (state.reward) html += '<div class="tmsg" id="xp-reward"></div>';
+  var el = document.getElementById("xp");
+  el.innerHTML = html;
+  var r = document.getElementById("xp-reward");
+  if (r) r.textContent = "🎁 Récompense visée : " + state.reward;
+}
+function bedLabel(dt) {
+  var days = Math.round((new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) - new Date(2026, 9, 17)) / 86400000);
+  var targets = [2.5, 2, 1.5, 1, 0.5, 0];
+  var h = targets[Math.min(5, Math.max(0, days))];
+  return h === 0 ? "minuit" : fmt(h);
+}
+function mini(label, kind, key) {
+  var b = document.createElement("button");
+  b.className = "mini" + (state[kind][key] ? " on" : "");
+  b.textContent = label;
+  b.setAttribute("aria-pressed", state[kind][key] ? "true" : "false");
+  b.onclick = function () { toggleDay(kind, key); };
+  return b;
+}
+function updateProgress() {
+  var w = WEEKS[cur], t = totals(w, cur);
+  var money = t.moneyDone + t.extra;
+  document.getElementById("stats").innerHTML =
+    '<span class="chip">Étude faite : <b>' + num(t.studyDone) + ' / ' + w.goal + ' h</b></span>' +
+    '<span class="chip">Argent gagné : <b>' + num(money) + ' / ' + MGOAL + ' €</b></span>' +
+    '<span class="chip">XP de la semaine : <b>' + t.xp + '</b></span>' +
+    '<span class="chip">Possible : <b>' + num(t.studyPossible) + ' h</b> · min. <b>' + num(t.moneyPossible) + ' €</b></span>';
+  var bm = document.getElementById("b-eur"), bh = document.getElementById("b-h");
+  if (!bm) return;
+  bm.style.width = Math.min(100, money / MGOAL * 100) + "%";
+  bh.style.width = Math.min(100, t.studyDone / w.goal * 100) + "%";
+  bm.className = money >= MGOAL ? "done" : "";
+  bh.className = t.studyDone >= w.goal ? "done" : "";
+  document.getElementById("m-eur").textContent = money >= MGOAL
+    ? "🎯 Objectif atteint !"
+    : num(money) + " / " + MGOAL + " € (reste " + num(MGOAL - money) + " €), dont " + num(t.moneyDone) + " € de shifts cochés";
+  document.getElementById("m-h").textContent = t.studyDone >= w.goal
+    ? "🎯 Objectif atteint !"
+    : num(t.studyDone) + " / " + w.goal + " h (reste " + num(w.goal - t.studyDone) + " h)";
+  var xb = document.getElementById("xp-break");
+  if (xb) xb.textContent = "Étude " + t.studyXP + " + shifts " + t.shiftXP + " + levers " + t.leverXP + " (" + t.lever + "/7) + couchers " + t.coucherXP + " (" + t.coucher + "/7) + bonus " + t.bonus + " = " + t.xp + " XP";
+  renderXP();
+}
+function render() {
+  var w = WEEKS[cur];
+  var tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  WEEKS.forEach(function (x, i) {
+    var b = document.createElement("button");
+    b.className = "tab" + (i === cur ? " on" : "");
+    var end = new Date(x.start); end.setDate(end.getDate() + 6);
+    b.textContent = x.label + " · " + x.start.getDate() + "/" + (x.start.getMonth() + 1) + " → " + end.getDate() + "/" + (end.getMonth() + 1);
+    b.onclick = function () { cur = i; render(); };
+    tabs.appendChild(b);
+  });
+  document.getElementById("note").textContent = w.note;
+
+  var todayStr = new Date().toDateString();
+  var cal = document.getElementById("cal");
+  cal.innerHTML = "";
+  cal.appendChild(document.createElement("div")).className = "head";
+  var isToday = [];
+  for (var d = 0; d < 7; d++) {
+    var dt = new Date(w.start); dt.setDate(dt.getDate() + d);
+    isToday[d] = dt.toDateString() === todayStr;
+    var hd = document.createElement("div");
+    hd.className = "head" + (isToday[d] ? " today" : "");
+    hd.innerHTML = DAYS[d] + "<small>" + dt.getDate() + "/" + (dt.getMonth() + 1) + "</small>";
+    hd.appendChild(mini("☀️ Lever 7h", "lever", cur + "-" + d));
+    hd.appendChild(mini("🌙 Coucher " + bedLabel(dt), "coucher", cur + "-" + d));
+    cal.appendChild(hd);
+  }
+  var tm = document.createElement("div");
+  tm.className = "times";
+  for (var h = START; h < END; h++) {
+    var s = document.createElement("span");
+    s.style.top = ((h - START) * H) + "px";
+    s.textContent = h + " h";
+    tm.appendChild(s);
+  }
+  cal.appendChild(tm);
+  for (var c = 0; c < 7; c++) {
+    var col = document.createElement("div");
+    col.className = "col" + (isToday[c] ? " today" : "");
+    w.ev.filter(function (e) { return e.d === c; }).forEach(function (e) {
+      var el = document.createElement("div");
+      var done = !!state.done[e.id];
+      el.className = "ev " + e.t + (e.warn ? " warn" : "") + (CHECKABLE[e.t] ? " click" : "") + (done ? " done" : "");
+      var l = e.l || 0, wd = e.w || 1;
+      el.style.top = ((e.s - START) * H) + "px";
+      el.style.height = ((e.e - e.s) * H - 2) + "px";
+      el.style.left = (l * 100 + 2) + "%";
+      el.style.width = (wd * 100 - 4) + "%";
+      var m = moneyOf(e);
+      el.innerHTML = "<b>" + e.title + "</b>" + (e.sub || (fmt(e.s) + " – " + fmt(e.e))) +
+        (m ? "<br><b>+ " + m + " € min.</b>" : "");
+      if (CHECKABLE[e.t]) {
+        var chk = document.createElement("span");
+        chk.className = "chk";
+        chk.textContent = done ? "✓" : "";
+        el.appendChild(chk);
+        el.setAttribute("role", "checkbox");
+        el.setAttribute("aria-checked", done ? "true" : "false");
+        el.setAttribute("tabindex", "0");
+        el.onclick = function () { toggle(e.id); };
+        el.onkeydown = function (ev2) { if (ev2.key === "Enter" || ev2.key === " ") { ev2.preventDefault(); toggle(e.id); } };
+      }
+      col.appendChild(el);
+    });
+    cal.appendChild(col);
+  }
+
+  var tr = document.getElementById("track");
+  tr.innerHTML = "<h2>Suivi de la semaine : " + w.label + "</h2>" +
+    '<div class="trow"><div>Argent</div><div><div class="bar"><i id="b-eur"></i></div><div class="tmsg" id="m-eur"></div>' +
+    '<div class="extra"><label for="in-extra">Argent en plus (pourboires, bonus) :</label><input id="in-extra" type="number" min="0" step="5" placeholder="0" value="' + (state.extra[cur] || "") + '"> €</div></div></div>' +
+    '<div class="trow"><div>Étude</div><div><div class="bar"><i id="b-h"></i></div><div class="tmsg" id="m-h"></div></div></div>' +
+    '<div class="trow"><div>XP</div><div class="tmsg" id="xp-break" style="margin:0"></div></div>' +
+    '<div class="extra"><label for="in-reward">Récompense au prochain niveau :</label><input id="in-reward" type="text" maxlength="60" placeholder="ex. une sortie, un resto…"></div>' +
+    '<div class="tmsg" style="margin-top:8px">Coche chaque bloc ou shift une fois fait : l’argent, les heures et les XP se calculent tout seuls.</div>';
+  document.getElementById("in-reward").value = state.reward || "";
+  document.getElementById("in-reward").oninput = function () {
+    state.reward = this.value.slice(0, 60);
+    persist(); renderXP();
+  };
+  document.getElementById("in-extra").oninput = function () {
+    var v = parseFloat(this.value);
+    if (v > 0) state.extra[cur] = v; else delete state.extra[cur];
+    persist(); updateProgress();
+  };
+  updateProgress();
+}
+render();
+
+/* Version autonome : les données restent dans le navigateur de l’appareil. */
+setSync("local");
+</script>
+</body>
+</html>
