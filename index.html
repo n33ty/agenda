@@ -13,212 +13,936 @@
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  --bg: #f4f6fa; --surface: #ffffff; --text: #1d2433; --muted: #6b7486; --line: #e1e6ee;
-  --cours: #5b7fae; --etude: #5aa37a; --uber: #2f3646; --ecole: #d58a6a; --prive: #b58bb0; --warn: #c0392b; --today: #fff6d6;
+  --bg: #f3f5fa; --surface: #ffffff; --text: #1b2232; --muted: #6a7488; --line: #e3e8f0; --today: #fff7da; --warn: #d33f33;
+  --cours: #5b7fae; --etude: #3f9e72; --argent: #c58b17; --sport: #d2506b;
+  --g-sleep: linear-gradient(90deg, #5b5bd6, #a78bfa);
+  --g-etude: linear-gradient(90deg, #2e9b6a, #7ee0a8);
+  --g-sport: linear-gradient(90deg, #e0516b, #ff9d8a);
+  --g-argent: linear-gradient(90deg, #d99a1c, #ffd66b);
+  --g-xp: linear-gradient(90deg, #f0a21c, #ffe08a);
+  --shadow: 0 1px 2px rgba(20,30,50,.06), 0 6px 18px rgba(20,30,50,.06);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #12151c; --surface: #1b1f29; --text: #e8ecf4; --muted: #98a2b6; --line: #2b3140;
-    --cours: #4a6a96; --etude: #3f8560; --uber: #3a4256; --ecole: #b86f50; --prive: #94709a; --today: #2c2a1c;
+    --bg: #11141b; --surface: #1b202b; --text: #e9edf6; --muted: #98a2b6; --line: #2b3242; --today: #2b2a1c;
+    --cours: #4a6a96; --etude: #35865f; --argent: #a8741a; --sport: #b44660; --shadow: none;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #12151c; --surface: #1b1f29; --text: #e8ecf4; --muted: #98a2b6; --line: #2b3140;
-  --cours: #4a6a96; --etude: #3f8560; --uber: #3a4256; --ecole: #b86f50; --prive: #94709a; --today: #2c2a1c;
+  --bg: #11141b; --surface: #1b202b; --text: #e9edf6; --muted: #98a2b6; --line: #2b3242; --today: #2b2a1c;
+  --cours: #4a6a96; --etude: #35865f; --argent: #a8741a; --sport: #b44660; --shadow: none;
 }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding: 16px; }
-.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
-h1 { font-size: 20px; margin: 0 0 4px; }
-.sub { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
-#sync { font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
-.tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-.tab { border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; }
-.tab.on { background: var(--cours); color: #fff; border-color: var(--cours); }
-.stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; font-size: 13px; }
-.chip { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
-.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
-.hint { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-.wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding: 16px; max-width: 1100px; margin-inline: auto; }
+button { font-family: inherit; color: inherit; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+h1 { font-size: 22px; margin: 0; }
+#sync { font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; white-space: nowrap; }
+.card { background: var(--surface); border-radius: 18px; padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); border: 1px solid var(--line); }
+
+/* XP */
+.lvl { font-size: 16px; font-weight: 700; }
+.lvl span { font-weight: 400; color: var(--muted); font-size: 13px; }
+.tmsg { color: var(--muted); font-size: 12px; margin-top: 6px; }
+.reward { width: 100%; margin-top: 10px; padding: 10px 12px; font-size: 14px; border: 1px dashed var(--line); border-radius: 12px; background: transparent; color: var(--text); }
+
+/* Barres */
+.pbar { position: relative; height: 16px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.pbar i { display: block; height: 100%; width: 0; border-radius: 999px; transition: width .8s cubic-bezier(.22, 1, .36, 1); box-shadow: inset 0 -2px 0 rgba(0,0,0,.08), inset 0 2px 0 rgba(255,255,255,.28); }
+.g-sleep { background: var(--g-sleep); } .g-etude { background: var(--g-etude); } .g-sport { background: var(--g-sport); } .g-argent { background: var(--g-argent); } .g-xp { background: var(--g-xp); }
+.xpcard .pbar { margin-top: 10px; height: 12px; }
+
+/* Semaine */
+.weeknav { display: grid; grid-template-columns: 52px 1fr 52px; gap: 10px; align-items: center; margin-bottom: 14px; }
+.weeknav button { height: 52px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); font-size: 26px; cursor: pointer; box-shadow: var(--shadow); }
+.weeknav button:disabled { opacity: .35; cursor: default; }
+.weeknav button:active { transform: scale(.96); }
+.weeklabel { text-align: center; }
+.weeklabel b { display: block; font-size: 20px; }
+.weeklabel span { color: var(--muted); font-size: 13px; }
+
+/* Objectifs */
+.obj { margin-bottom: 16px; }
+.obj:last-of-type { margin-bottom: 0; }
+.objhead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 7px; }
+.objname { font-weight: 650; font-size: 15px; }
+.objval { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+.objval b { color: var(--text); }
+.edit { border: none; background: transparent; color: var(--muted); font-size: 14px; cursor: pointer; padding: 2px 6px; border-radius: 8px; }
+.sub { font-size: 12px; color: var(--muted); margin-top: 5px; }
+
+/* Boutons d’ajout */
+.actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.big { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 60px; padding: 12px 14px; border: none; border-radius: 16px; font-size: 15px; font-weight: 650; color: #fff; cursor: pointer; box-shadow: var(--shadow); text-align: left; transition: transform .1s; }
+.big:active { transform: scale(.97); }
+.big .ic { font-size: 22px; line-height: 1; }
+.big.argent { background: var(--g-argent); color: #3a2a00; }
+.big.etude { background: var(--g-etude); color: #06301c; }
+.big.sport { background: var(--g-sport); color: #4a0b19; }
+.addblock { width: 100%; min-height: 54px; margin-bottom: 12px; border-radius: 16px; border: 2px dashed var(--line); background: var(--surface); font-size: 15px; font-weight: 650; cursor: pointer; }
+.addblock:active { transform: scale(.98); }
+
+/* Agenda */
+.wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 14px; box-shadow: var(--shadow); }
 .cal { min-width: 720px; display: grid; grid-template-columns: 46px repeat(7, 1fr); }
 .head { font-weight: 600; font-size: 13px; text-align: center; padding: 8px 2px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .head.today { background: var(--today); }
 .head small { display: block; color: var(--muted); font-weight: 400; }
 .times { position: relative; height: 640px; }
 .times span { position: absolute; right: 6px; font-size: 11px; color: var(--muted); transform: translateY(-6px); }
-.col { position: relative; height: 640px; border-left: 1px solid var(--line);
-  background-image: linear-gradient(to bottom, var(--line) 1px, transparent 1px); background-size: 100% 40px; }
+.col { position: relative; height: 640px; border-left: 1px solid var(--line); background-image: linear-gradient(to bottom, var(--line) 1px, transparent 1px); background-size: 100% 40px; }
 .col.today { background-color: var(--today); }
-.ev { position: absolute; border-radius: 6px; padding: 3px 5px; font-size: 11px; line-height: 1.25; color: #fff; overflow: hidden; border: 1px solid rgba(0,0,0,.12); }
-.ev b { display: block; font-size: 11px; }
-.ev.cours { background: var(--cours); }
-.ev.etude { background: var(--etude); }
-.ev.uber { background: var(--uber); }
-.ev.ecole { background: var(--ecole); }
-.ev.prive { background: var(--prive); }
-.ev.warn { outline: 2px solid var(--warn); outline-offset: -2px; }
-.ev.click { cursor: pointer; padding-right: 22px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
-.ev.click:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
-.ev .chk { position: absolute; top: 3px; right: 4px; width: 15px; height: 15px; border: 1.5px solid rgba(255,255,255,.95); border-radius: 4px; font-size: 11px; line-height: 12px; text-align: center; font-weight: 700; }
+.ev { position: absolute; border-radius: 8px; padding: 3px 5px; font-size: 11px; line-height: 1.25; color: #fff; overflow: hidden; border: 1px solid rgba(0,0,0,.12); cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.ev b { display: block; font-size: 11px; padding-right: 22px; }
+.ev.cours { background: var(--cours); } .ev.etude { background: var(--etude); } .ev.argent { background: var(--argent); } .ev.sport { background: var(--sport); }
+.ev.over { outline: 2px solid var(--warn); outline-offset: -2px; }
 .ev.done { opacity: .55; }
-.ev.done .chk { background: #fff; color: #222; }
-.track { margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
-.track h2 { font-size: 15px; margin: 0 0 10px; }
-.trow { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
-.bar { height: 10px; background: var(--line); border-radius: 6px; overflow: hidden; }
-.bar i { display: block; height: 100%; width: 0; background: var(--cours); transition: width .3s; }
-.bar i.done { background: var(--etude); }
-.tmsg { color: var(--muted); font-size: 12px; margin-top: 3px; }
-.extra { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-.extra input { width: 90px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); font-size: 14px; }
-.xpcard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }
-.xpcard .lvl { font-size: 15px; font-weight: 600; }
-.xpcard .bar { margin: 8px 0 4px; }
-.xpcard .bar i { background: #e0a526; }
-.mini { touch-action: manipulation; display: block; width: calc(100% - 8px); margin: 3px 4px 0; padding: 3px 2px; font-size: 10px; line-height: 1.2; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); cursor: pointer; font-weight: 500; }
-.mini.on { background: var(--etude); border-color: var(--etude); color: #fff; }
-.extra input[type=text] { width: 220px; max-width: 100%; }
-.note { margin-top: 12px; font-size: 13px; color: var(--muted); line-height: 1.5; }
-.sleep { margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.6; }
-.sleep h2 { font-size: 15px; margin: 0 0 6px; }
-@media (max-width: 520px) { .trow { grid-template-columns: 1fr; gap: 4px; } }
+.chk { position: absolute; top: 2px; right: 2px; width: 24px; height: 24px; padding: 0; border: 1.5px solid rgba(255,255,255,.95); border-radius: 7px; background: rgba(255,255,255,.12); color: #222; font-size: 14px; line-height: 1; font-weight: 800; cursor: pointer; touch-action: manipulation; }
+.ev.done .chk { background: #fff; }
+.scell { padding: 4px 3px; border-left: 1px solid var(--line); background: var(--surface); }
+.scell.first { border-left: none; }
+.scell.today { background: var(--today); }
+.srow-top { border-bottom: 1px solid var(--line); }
+.srow-bottom { border-top: 1px solid var(--line); }
+.sl { display: block; width: 100%; min-height: 38px; padding: 4px 3px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--muted); font-size: 11px; font-weight: 650; line-height: 1.2; cursor: pointer; text-align: center; touch-action: manipulation; }
+.sl.on { background: linear-gradient(90deg, #5b5bd6, #a78bfa); border-color: #6a63e0; color: #fff; }
+
+/* Avatar */
+.avhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.avhead b { font-size: 16px; }
+.avstatus { font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 999px; background: var(--bg); color: var(--muted); }
+.avstage { border-radius: 14px; overflow: hidden; line-height: 0; border: 1px solid #1f4a58; }
+.avbadges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.avbadge { background: var(--bg); border-radius: 999px; padding: 6px 11px; font-size: 13px; font-weight: 650; }
+.avbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.big.alt { background: var(--bg); color: var(--text); box-shadow: none; border: 1px solid var(--line); }
+.sheet.wide { max-width: 600px; }
+.wgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.wcard { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--bg); cursor: pointer; padding: 0; text-align: left; }
+.wcard.sel { border-color: #3b6fd8; box-shadow: 0 0 0 2px rgba(59,111,216,.35); }
+.wcard .wt { padding: 8px 10px 10px; font-size: 12px; color: var(--muted); }
+.wcard .wt b { display: block; color: var(--text); font-size: 14px; }
+.wcard .wst { margin-top: 5px; line-height: 1.5; }
+.avprev { border-radius: 14px; overflow: hidden; line-height: 0; margin-bottom: 6px; border: 1px solid #1f4a58; }
+.seg { display: flex; gap: 6px; margin-bottom: 10px; }
+.seg button { flex: 1; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); font-size: 13px; cursor: pointer; }
+.seg button.sel { background: #3b6fd8; border-color: #3b6fd8; color: #fff; }
+.sw-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.sw { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--surface); box-shadow: 0 0 0 1.5px var(--line); cursor: pointer; padding: 0; }
+.sw.sel { box-shadow: 0 0 0 3px #3b6fd8; }
+.opt { height: 38px; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); font-size: 14px; cursor: pointer; }
+.opt.sel { background: #3b6fd8; border-color: #3b6fd8; color: #fff; }
+.avstage canvas, .avprev canvas, .wcard canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+.avstage, .avprev { background: #07141b; }
+.wcard { background: #07141b; }
+.wcard .wt { background: var(--bg); }
+
+/* Historique */
+.hrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.hrow:last-child { border-bottom: none; }
+.hrow small { color: var(--muted); display: block; font-size: 12px; }
+.hdel { border: none; background: var(--bg); width: 34px; height: 34px; border-radius: 10px; font-size: 15px; cursor: pointer; flex: none; }
+
+/* Fenêtres */
+.modal { position: fixed; inset: 0; background: rgba(10,14,22,.55); display: flex; align-items: flex-end; justify-content: center; z-index: 50; }
+.modal[hidden] { display: none; }
+.sheet { background: var(--surface); width: 100%; max-width: 480px; border-radius: 22px 22px 0 0; padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 0px)); max-height: 92vh; overflow: auto; }
+@media (min-width: 600px) { .modal { align-items: center; } .sheet { border-radius: 22px; } }
+.sheet h2 { font-size: 18px; margin: 0 0 14px; display: flex; justify-content: space-between; align-items: center; }
+.x { border: none; background: var(--bg); width: 36px; height: 36px; border-radius: 12px; font-size: 18px; cursor: pointer; }
+.sheet label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 5px; }
+.sheet input, .sheet select { width: 100%; height: 48px; padding: 0 12px; font-size: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--text); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tbtn { height: 56px; border-radius: 14px; border: 2px solid var(--line); background: var(--bg); font-size: 14px; font-weight: 650; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.tbtn.sel.etude { background: var(--etude); border-color: var(--etude); color: #fff; }
+.tbtn.sel.argent { background: var(--argent); border-color: var(--argent); color: #fff; }
+.tbtn.sel.sport { background: var(--sport); border-color: var(--sport); color: #fff; }
+.chips { display: flex; gap: 8px; margin-top: 8px; }
+.chip { flex: 1; height: 42px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); font-size: 14px; cursor: pointer; }
+.net { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: var(--bg); font-size: 15px; display: flex; justify-content: space-between; }
+.net b { font-size: 17px; }
+.btns { display: flex; gap: 10px; margin-top: 18px; }
+.btn { flex: 1; height: 52px; border-radius: 14px; border: none; font-size: 16px; font-weight: 650; cursor: pointer; background: var(--bg); }
+.btn.primary { background: #3b6fd8; color: #fff; }
+.btn.danger { background: #fde8e6; color: #b3261e; }
+.err { color: var(--warn); font-size: 13px; margin-top: 10px; min-height: 16px; }
+
+@media (max-width: 640px) {
+  .actions { grid-template-columns: 1fr; }
+  .big { justify-content: flex-start; }
+}
 </style>
 </head>
 <body>
-<div class="top">
-  <div>
-    <h1>Agenda d’Abdo</h1>
-    <div class="sub">Lever fixe à 7h · blocs d’étude aux mêmes heures chaque semaine</div>
-  </div>
-  <div id="sync">Connexion…</div>
-</div>
-<div class="xpcard" id="xp"></div>
-<div class="tabs" id="tabs"></div>
-<div class="stats" id="stats"></div>
-<div class="legend">
-  <span><i style="background:var(--cours)"></i>Cours</span>
-  <span><i style="background:var(--etude)"></i>Étude</span>
-  <span><i style="background:var(--uber)"></i>Uber Eats</span>
-  <span><i style="background:var(--ecole)"></i>École de devoirs</span>
-  <span><i style="background:var(--prive)"></i>Cours particulier</span>
-  <span><i style="background:transparent;border:2px solid var(--warn)"></i>Conflit</span>
-</div>
-<div class="hint">Touche un bloc d’étude ou un shift pour le cocher quand il est fait. Sous chaque jour, ☀️ pour le lever à 7h et 🌙 pour le coucher à l’heure.</div>
-<div class="wrap"><div class="cal" id="cal"></div></div>
-<div class="track" id="track"></div>
-<div class="note" id="note"></div>
+<div class="top"><h1>Agenda d’Abdo</h1><div id="sync">Connexion…</div></div>
 
-<div class="sleep">
-  <h2>Sommeil : descente par paliers (lever 7h)</h2>
-  Sam 17 → Dim 18 : coucher 2h30 · Dim → Lun : 2h00 · Lun → Mar : 1h30 · Mar → Mer : 1h00 · Mer → Jeu : 0h30 · Jeu → Ven : 0h00, puis minuit chaque soir.<br>
-  Lumière vive au réveil, pas d’écran 30 min avant de dormir, pas de caféine après 14h.
+<div class="card xpcard">
+  <div class="lvl" id="xp-lvl"></div>
+  <div class="pbar"><i id="xp-bar" class="g-xp"></i></div>
+  <div class="tmsg" id="xp-msg"></div>
+  <input class="reward" id="in-reward" type="text" maxlength="60" placeholder="🎁 Ma récompense au prochain niveau" aria-label="Récompense au prochain niveau">
 </div>
-<div class="sleep">
-  <h2>Règles des XP</h2>
-  Bloc d’étude coché : <b>24 XP par heure</b> · Shift coché : <b>0,4 XP par euro</b> (Uber journée = 40 XP) · ☀️ Lever à 7h : <b>20 XP</b> · 🌙 Coucher à l’heure : <b>20 XP</b><br>
-  Bonus de la semaine : 5 levers sur 7 = <b>+50</b> · objectif d’étude atteint = <b>+100</b> · objectif d’argent atteint = <b>+100</b>
+
+<div class="weeknav">
+  <button id="prev" aria-label="Semaine précédente">‹</button>
+  <div class="weeklabel"><b id="wk-title"></b><span id="wk-range"></span></div>
+  <button id="next" aria-label="Semaine suivante">›</button>
 </div>
+
+<div class="card">
+  <div class="avhead"><b id="av-title"></b><span class="avstatus" id="av-status"></span></div>
+  <div class="avstage"><canvas id="av-canvas" width="144" height="96" aria-label="Avatar pixel art animé"></canvas></div>
+  <div class="avbadges" id="av-badges"></div>
+  <div class="avbtns">
+    <button class="big alt" id="av-custom"><span class="ic">🎨</span><span>Personnaliser</span></button>
+    <button class="big alt" id="av-weeks"><span class="ic">🖼️</span><span>Mes semaines</span></button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="obj">
+    <div class="objhead"><div class="objname">🌙 Sommeil</div><div class="objval" id="val-sleep"></div></div>
+    <div class="pbar"><i id="bar-sleep" class="g-sleep"></i></div>
+  </div>
+  <div class="obj">
+    <div class="objhead"><div class="objname">📚 Étude <button class="edit" data-goal="etude" aria-label="Modifier l’objectif d’étude">✎</button></div><div class="objval" id="val-etude"></div></div>
+    <div class="pbar"><i id="bar-etude" class="g-etude"></i></div>
+  </div>
+  <div class="obj">
+    <div class="objhead"><div class="objname">🏃 Sport <button class="edit" data-goal="sport" aria-label="Modifier l’objectif de sport">✎</button></div><div class="objval" id="val-sport"></div></div>
+    <div class="pbar"><i id="bar-sport" class="g-sport"></i></div>
+  </div>
+  <div class="obj">
+    <div class="objhead"><div class="objname">💶 Argent <button class="edit" data-goal="argent" aria-label="Modifier l’objectif d’argent">✎</button></div><div class="objval" id="val-argent"></div></div>
+    <div class="pbar"><i id="bar-argent" class="g-argent"></i></div>
+    <div class="sub" id="sub-argent"></div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="big argent" id="add-gains"><span class="ic">💶</span><span>Ajouter mes gains</span></button>
+  <button class="big etude" id="add-etude"><span class="ic">📚</span><span>Ajouter des heures d’étude</span></button>
+  <button class="big sport" id="add-sport"><span class="ic">🏃</span><span>Ajouter des heures de sport</span></button>
+</div>
+
+<button class="addblock" id="add-block">＋ Ajouter un bloc à l’agenda</button>
+<div class="wrap"><div class="cal" id="cal"></div></div>
+<div class="card" id="history" hidden></div>
+
+<div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
 
 <script>
 var START = 7, END = 23, H = 40;
 var DAYS = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-var MONEY = { uber: 100, ecole: 20, prive: 50 };
-var MGOAL = 450;
-var CHECKABLE = { etude: 1, uber: 1, ecole: 1, prive: 1 };
-var WEEKS = [
-  { label: "Semaine A", start: new Date(2026, 9, 19), goal: 25,
-    note: "Pas d’école de devoirs cette semaine. Mercredi : je suppose que tu suis le CM Public policy." },
-  { label: "Semaine B", start: new Date(2026, 9, 26), goal: 35,
-    note: "Vacances : plus d’étude le matin, Uber Eats en soirée du lundi au jeudi (dès 17h30, dès 19h le mercredi après le cours particulier). Montants des soirées Uber estimés au prorata." },
-  { label: "Semaine C", start: new Date(2026, 10, 2), goal: 25,
-    note: "Mardi 3/11 : l’école de devoirs (16h30) chevauche la fin de Théorie des organisations. Vendredi 6/11 : CM Économétrie à 13h30 pendant Uber Eats, à décider." }
+var DAYS_LONG = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+var MONTHS = ["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+var TYPES = {
+  etude: { label: "Étude", icon: "📚" },
+  argent: { label: "Argent", icon: "💶", title: "Uber Eats" },
+  sport: { label: "Sport", icon: "🏃" }
+};
+var CHECKABLE = { etude: 1, argent: 1, sport: 1 };
+var WEEK0 = new Date(2026, 9, 19);
+var SLEEP_TOTAL = 14;
+var LEVELS = [
+  { n: "Recrue", x: 0 }, { n: "Apprenti", x: 500 }, { n: "Studieux", x: 1200 }, { n: "Discipliné", x: 2200 },
+  { n: "Régulier", x: 3500 }, { n: "Expert", x: 5000 }, { n: "Maître", x: 7000 }, { n: "Légende", x: 9500 }
 ];
+function $(id) { return document.getElementById(id); }
 
 function E(d, s, e, type, title, sub, extra) {
   var o = { d: d, s: s, e: e, t: type, title: title, sub: sub || "" };
   if (extra) for (var k in extra) o[k] = extra[k];
   return o;
 }
+function S(d, s, e, course) {
+  return E(d, s, e, "etude", "Étude", fmt(s) + " – " + fmt(e));
+}
 function build(i) {
   var ev = [], d;
   if (i !== 1) {
+    // CM gardés : Management, PPS, Éthique. TP Économétrie gardé. CM GDO, Économétrie et TDO sautés.
     ev.push(E(0, 14.5, 16.5, "cours", "CM Management et stratégie"));
-    ev.push(E(1, 10.5, 12.5, "cours", "CM Économétrie"), E(1, 13.5, 15.5, "cours", "TP Économétrie"),
-            E(1, 15.75, 17.75, "cours", "CM Théorie des organisations", "", i === 2 ? { l: 0, w: 0.5, warn: true } : null));
-    ev.push(E(2, 8.5, 10.5, "cours", "CM Public policy"));
-    ev.push(E(3, 10.5, 12.5, "cours", "CM Éthique et économie"), E(3, 13.5, 15.5, "cours", "CM Économétrie"));
+    ev.push(E(1, 13.5, 15.5, "cours", "TP Économétrie"));
+    ev.push(E(2, 8.5, 10.5, "cours", "PPS (Public policy seminar)"));
+    ev.push(E(3, 10.5, 12.5, "cours", "CM Éthique et économie"));
   }
   ev.push(E(2, 17, 18.5, "prive", "Cours particulier", "17h – 18h30"));
   if (i === 2) {
-    ev.push(E(1, 16.5, 18.25, "ecole", "École de devoirs", "16h30 – 18h15", { l: 0.5, w: 0.5, warn: true }));
+    ev.push(E(1, 16.5, 18.25, "ecole", "École de devoirs", "16h30 – 18h15"));
     ev.push(E(3, 16.5, 18.25, "ecole", "École de devoirs", "16h30 – 18h15"));
   }
-  // Uber Eats + étude du week-end
+  var wk = ["GDO", "Économétrie", "TDO"];
   for (d = 4; d <= 6; d++) {
-    ev.push(E(d, 7.5, 10, "etude", "Étude", "Bloc matin 7h30 – 10h"));
-    if (i === 2 && d === 4) {
-      ev.push(E(d, 11, 22, "uber", "Uber Eats", "11h – 22h", { l: 0, w: 0.5 }));
-      ev.push(E(d, 13.5, 15.5, "cours", "CM Économétrie (à décider)", "", { l: 0.5, w: 0.5, warn: true }));
-    } else {
-      ev.push(E(d, 11, 22, "uber", "Uber Eats", "11h – 22h"));
-    }
+    ev.push(S(d, 7.5, 10, wk[d - 4]));
+    ev.push(E(d, 11, 22, "uber", "Uber Eats", "11h – 22h"));
   }
-  // Blocs d’étude fixes en semaine
   if (i === 1) {
-    ev.push(E(0, 7.5, 14, "etude", "Étude", "Bloc lundi 7h30 – 14h"), E(0, 14, 17, "etude", "Étude", "Bloc après-midi 14h – 17h"));
-    ev.push(E(1, 7.5, 12.5, "etude", "Étude", "Bloc matin 7h30 – 12h30"), E(1, 14, 17, "etude", "Étude", "Bloc après-midi 14h – 17h"));
-    ev.push(E(2, 7.5, 16, "etude", "Étude", "Bloc mercredi 7h30 – 16h"));
-    ev.push(E(3, 7.5, 12.5, "etude", "Étude", "Bloc matin 7h30 – 12h30"), E(3, 14, 17, "etude", "Étude", "Bloc après-midi 14h – 17h"));
+    ev.push(S(0, 7.5, 14, "GDO"), S(0, 14, 17, "TDO"));
+    ev.push(S(1, 7.5, 12.5, "GDO"), S(1, 14, 17, "Économétrie"));
+    ev.push(S(2, 7.5, 12, "Économétrie"), S(2, 12.5, 16, "Travaux de groupe"));
+    ev.push(S(3, 7.5, 12.5, "GDO"), S(3, 14, 17, "Économétrie"));
     [0, 1, 3].forEach(function (x) { ev.push(E(x, 17.5, 22, "uber", "Uber Eats", "17h30 – 22h", { m: 40 })); });
     ev.push(E(2, 19, 22, "uber", "Uber Eats", "19h – 22h", { m: 25 }));
   } else {
-    ev.push(E(0, 7.5, 14, "etude", "Étude", "Bloc lundi 7h30 – 14h"));
-    ev.push(E(1, 7.5, 10, "etude", "Étude", "Bloc matin 7h30 – 10h"));
-    ev.push(E(2, 11, 16, "etude", "Étude", "Bloc mercredi 11h – 16h"));
-    ev.push(E(3, 7.5, 10, "etude", "Étude", "Bloc matin 7h30 – 10h"));
-    for (d = 0; d <= 3; d++) ev.push(E(d, 19.5, 21, "etude", "Étude", "Bloc soir 19h30 – 21h"));
+    ev.push(S(0, 7.5, 10.5, "GDO"), S(0, 11, 14, "Économétrie"), S(0, 19.5, 21, "TDO"));
+    ev.push(S(1, 7.5, 10, "GDO"), S(1, 10.5, 13, "Économétrie"), S(1, 19.5, 21, "TDO"));
+    ev.push(S(2, 11, 13.5, "TDO"), S(2, 14, 16, "PPS"), S(2, 19.5, 21, "Éthique"));
+    ev.push(S(3, 7.5, 10, "GDO"), S(3, 13.5, 16, "Management"), S(3, 19.5, 21, "Économétrie"));
   }
   return ev;
 }
-WEEKS.forEach(function (w, i) {
-  w.ev = build(i);
-  w.ev.forEach(function (e) { e.id = (i + "-" + e.d + "-" + e.s + "-" + e.t).replace(/\./g, "_"); });
-});
 
-function moneyOf(e) { return MONEY[e.t] ? (e.m !== undefined ? e.m : MONEY[e.t]) : 0; }
+/* ===== Moteur pixel art (144 x 96) ===== */
+var PW = 144, PH = 96, GY = 88;
+var _cc = {};
+function C(hex) {
+  if (_cc[hex] !== undefined) return _cc[hex];
+  var n = parseInt(hex.slice(1), 16);
+  var v = ((255 << 24) | ((n & 255) << 16) | (((n >> 8) & 255) << 8) | ((n >> 16) & 255)) >>> 0;
+  _cc[hex] = v; return v;
+}
+function mix(hex, f) {
+  var n = parseInt(hex.slice(1), 16), r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  function ch(c) { return f >= 0 ? Math.round(c + (255 - c) * f) : Math.round(c * (1 + f)); }
+  return "#" + ((1 << 24) | (ch(r) << 16) | (ch(g) << 8) | ch(b)).toString(16).slice(1);
+}
+function hash(a, b) { var h = (a * 374761393 + b * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+function Layer() { this.b = new Uint32Array(PW * PH); }
+Layer.prototype.px = function (x, y, c) { x = Math.round(x); y = Math.round(y); if (x >= 0 && y >= 0 && x < PW && y < PH) this.b[y * PW + x] = c; };
+Layer.prototype.rect = function (x, y, w, h, c) { for (var j = 0; j < h; j++) for (var i = 0; i < w; i++) this.px(x + i, y + j, c); };
+Layer.prototype.disc = function (cx, cy, r, c, fn) {
+  var R = Math.ceil(r);
+  for (var j = -R; j <= R; j++) for (var i = -R; i <= R; i++)
+    if (i * i + j * j <= r * r + 0.5) { var v = fn ? fn(Math.round(cx) + i, Math.round(cy) + j) : c; if (v) this.px(cx + i, cy + j, v); }
+};
+Layer.prototype.line = function (x0, y0, x1, y1, c, t) {
+  t = t || 1; var o = -Math.floor((t - 1) / 2);
+  x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
+  var dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx + dy;
+  for (;;) {
+    this.rect(x0 + o, y0 + o, t, t, c);
+    if (x0 === x1 && y0 === y1) break;
+    var e2 = 2 * err;
+    if (e2 >= dy) { err += dy; x0 += sx; }
+    if (e2 <= dx) { err += dx; y0 += sy; }
+  }
+};
+Layer.prototype.poly = function (pts, c, fn) {
+  var minY = 1e9, maxY = -1e9, i, k;
+  pts.forEach(function (p) { minY = Math.min(minY, p[1]); maxY = Math.max(maxY, p[1]); });
+  for (var y = Math.floor(minY); y <= Math.ceil(maxY); y++) {
+    var xs = [], yy = y + 0.5;
+    for (i = 0; i < pts.length; i++) {
+      var a = pts[i], b = pts[(i + 1) % pts.length];
+      if ((a[1] <= yy && b[1] > yy) || (b[1] <= yy && a[1] > yy)) xs.push(a[0] + (yy - a[1]) * (b[0] - a[0]) / (b[1] - a[1]));
+    }
+    xs.sort(function (p, q) { return p - q; });
+    for (k = 0; k + 1 < xs.length; k += 2)
+      for (var x = Math.round(xs[k]); x < Math.round(xs[k + 1]); x++) { var v2 = fn ? fn(x, y) : c; if (v2) this.px(x, y, v2); }
+  }
+};
+function outlineLayer(L, oc) {
+  var s = L.b, d = new Uint32Array(s), x, y;
+  for (y = 0; y < PH; y++) for (x = 0; x < PW; x++) {
+    if (s[y * PW + x]) continue;
+    if ((x > 0 && s[y * PW + x - 1]) || (x < PW - 1 && s[y * PW + x + 1]) || (y > 0 && s[(y - 1) * PW + x]) || (y < PH - 1 && s[(y + 1) * PW + x])) d[y * PW + x] = oc;
+  }
+  L.b = d;
+}
+function unpackU(c) { return [c & 255, (c >> 8) & 255, (c >> 16) & 255]; }
+function packU(r, g, b) { return ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0; }
+function lerpU(c, t, tr, tg, tb) { var u = unpackU(c); return packU(Math.round(u[0] + (tr - u[0]) * t), Math.round(u[1] + (tg - u[1]) * t), Math.round(u[2] + (tb - u[2]) * t)); }
+function outlineSel(L, rim) {
+  var s = L.b, d = new Uint32Array(s), x, y, i, n;
+  for (y = 0; y < PH; y++) for (x = 0; x < PW; x++) {
+    i = y * PW + x;
+    if (s[i]) {
+      if (rim) {
+        if (!(y > 0 && s[i - PW])) d[i] = lerpU(s[i], 0.42, 130, 215, 232);
+        else if (!(x > 0 && s[i - 1])) d[i] = lerpU(s[i], 0.22, 90, 160, 190);
+      }
+      continue;
+    }
+    n = (x > 0 && s[i - 1]) || (x < PW - 1 && s[i + 1]) || (y > 0 && s[i - PW]) || (y < PH - 1 && s[i + PW]);
+    if (n) d[i] = lerpU(n, 0.64, 6, 10, 18);
+  }
+  L.b = d;
+}
+function blit(out, L, dy) {
+  for (var y = 0; y < PH; y++) for (var x = 0; x < PW; x++) {
+    var v = L.b[y * PW + x]; if (!v) continue;
+    var ty = y + dy; if (ty >= 0 && ty < PH) out[ty * PW + x] = v;
+  }
+}
+function bandsOf(c) { return { hi: mix(c, 0.3), mid: c, lo: mix(c, -0.32) }; }
+function bandFn(y0, y1, b) {
+  return function (x, y) {
+    var t = (y - y0) / Math.max(1, y1 - y0), ck = (x + y) % 2 === 0;
+    if (t < 0.18) return C(b.hi);
+    if (t < 0.27) return C(ck ? b.hi : b.mid);
+    if (t > 0.78) return C(b.lo);
+    if (t > 0.68) return C(ck ? b.lo : b.mid);
+    return C(b.mid);
+  };
+}
+
+/* ===== Décor de nuit ===== */
+var TOWERS = [
+  [0, 10, 26, 0], [11, 8, 34, 0], [20, 12, 22, 0], [33, 7, 40, 0], [41, 10, 28, 0], [52, 9, 36, 0], [62, 12, 24, 0],
+  [75, 10, 46, 1], [86, 9, 30, 0], [96, 12, 38, 0], [109, 8, 26, 0], [118, 11, 42, 0], [130, 7, 30, 0], [138, 6, 22, 0]
+];
+function drawNight(out, f) {
+  var x, y, bands = [[0, "#04121a"], [12, "#061d27"], [26, "#082a35"], [40, "#0b3640"], [52, "#0f4650"], [62, "#14565f"]];
+  for (y = 0; y < 66; y++) { var col = C(bands[0][1]); bands.forEach(function (b) { if (y >= b[0]) col = C(b[1]); }); for (x = 0; x < PW; x++) out[y * PW + x] = col; }
+  var L = new Layer(), i;
+  for (i = 0; i < 34; i++) {
+    var sx = Math.floor(hash(i, 7) * PW), sy = Math.floor(hash(i, 13) * 38);
+    var tw = (Math.floor(f / 3) + i) % 7 === 0;
+    L.px(sx, sy, C(tw ? "#ffffff" : (i % 3 ? "#7fb2c4" : "#b8d8e2")));
+  }
+  blit(out, L, 0);
+  var M = new Layer(); // croissant de lune + halo
+  for (var gy = 0; gy < 32; gy++) for (var gx = 90; gx < 136; gx++) { var dd = Math.sqrt((gx - 112) * (gx - 112) + (gy - 14) * (gy - 14)); if (dd > 7 && dd < 14 && ((gx + gy) % 2 === 0) && dd < 10 + (Math.floor(f / 6) % 2)) M.px(gx, gy, C("#0f4a54")); else if (dd >= 10 && dd < 14 && ((gx + gy) % 4 === 0)) M.px(gx, gy, C("#0c3d47")); }
+  M.disc(112, 14, 7, C("#f3efe0")); M.disc(116, 11, 6, C("#082a35"));
+  M.disc(110, 17, 1.2, C("#d6d1bc"));
+  blit(out, M, 0);
+  var AP = new Layer(); // avion, oiseaux, étoile filante
+  var px0 = (f * 0.3) % (PW + 30) - 10; AP.px(px0, 11, C("#ffffff")); AP.px(px0 - 2, 11, C(Math.floor(f / 5) % 2 ? "#ff4a3a" : "#5a1a16")); AP.px(px0 + 2, 11, C(Math.floor(f / 5) % 2 ? "#3aff7a" : "#154a2a"));
+  for (var bi = 0; bi < 3; bi++) {
+    var bxx = ((PW + 40 - f * (1.1 + bi * 0.15) - bi * 46) % (PW + 40) + PW + 40) % (PW + 40) - 10, byy = 20 + bi * 7 + Math.round(Math.sin(f * 0.3 + bi) * 1), up = Math.floor(f / 2 + bi) % 2;
+    AP.px(bxx, byy, C("#0a2a33")); AP.px(bxx - 1, byy + (up ? -1 : 1), C("#0a2a33")); AP.px(bxx + 1, byy + (up ? -1 : 1), C("#0a2a33")); AP.px(bxx - 2, byy + (up ? -2 : 1), C("#0a2a33")); AP.px(bxx + 2, byy + (up ? -2 : 1), C("#0a2a33"));
+  }
+  var sa = f % 150; if (sa < 9) for (var si = 0; si < 7; si++) AP.px(28 + sa * 4 - si * 3, 4 + sa * 2 - si * 1.4, C(si < 2 ? "#ffffff" : (si < 4 ? "#bfe6f0" : "#4f8ea0")));
+  blit(out, AP, 0);
+  var off1 = Math.floor(f * 0.25) % PW, F = new Layer();
+  [0, 1].forEach(function (rep) {
+    TOWERS.forEach(function (b, k) {
+      var bx = b[0] - off1 + rep * PW, h = Math.round(b[2] * 0.7);
+      F.rect(bx + 1, 66 - h, b[1] - 1, h, C("#0c3039"));
+      for (var wy = 66 - h + 2; wy < 64; wy += 3) for (var wx = bx + 2; wx < bx + b[1] - 1; wx += 3) if (hash(wx + rep * 7, wy + k) > 0.72) F.px(wx, wy, C("#2c7882"));
+    });
+  });
+  blit(out, F, 0);
+  var off2 = Math.floor(f * 0.6) % PW, N = new Layer(), lights = [];
+  [0, 1].forEach(function (rep) {
+    TOWERS.forEach(function (b, k) {
+      var bx = b[0] - off2 + rep * PW, h = b[2], top = 66 - h;
+      N.rect(bx, top, b[1], h, C("#07161d"));
+      N.rect(bx, top, 1, h, C("#0d2a33"));
+      if (b[3]) { // tour à flèche éclairée
+        N.rect(bx + 2, top - 6, b[1] - 4, 6, C("#07161d")); N.rect(bx + 4, top - 12, b[1] - 8, 6, C("#07161d")); N.rect(bx + b[1] / 2 - 1, top - 20, 2, 8, C("#07161d"));
+        N.rect(bx + 3, top - 5, b[1] - 6, 3, C("#ffd88a")); N.rect(bx + 5, top - 11, b[1] - 10, 3, C("#ffe8b0")); N.px(bx + b[1] / 2, top - 21, C("#aef2ff"));
+      }
+      for (var wy = top + 2; wy < 64; wy += 3) for (var wx = bx + 2; wx < bx + b[1] - 1; wx += 2) {
+        var hv = hash(wx - b[0] + rep * 300, wy + k * 5), flick = hash(wx + wy, Math.floor(f / 24));
+        if (hv > 0.38) {
+          var cc = hv > 0.9 ? "#8fe3ff" : (hv > 0.62 ? "#ffd27a" : "#ffb347");
+          if (flick < 0.04) cc = "#07161d";
+          N.px(wx, wy, C(cc));
+          if (wy > 52 && hv > 0.62) lights.push(wx);
+        }
+      }
+    });
+  });
+  blit(out, N, 0);
+  var Wt = new Layer(); // eau
+  Wt.rect(0, 66, PW, 12, C("#0a3640"));
+  for (y = 66; y < 78; y++) for (x = 0; x < PW; x++) if (((x * 3 + y * 7 + Math.floor(f / 2)) % 11) === 0) Wt.px(x, y, C("#14606a"));
+  lights.forEach(function (lx, k) {
+    for (var ry = 67; ry < 77; ry++) if (((ry + k + Math.floor(f / 2)) % 3) === 0) Wt.px(lx, ry, C(ry < 71 ? "#d9a24f" : "#8a6a3a"));
+  });
+  for (var my = 67; my < 78; my++) { var mw = 1 + ((my + Math.floor(f / 2)) % 3); for (var mx = 112 - mw; mx <= 112 + mw; mx++) if (((mx + my) % 2) === 0) Wt.px(mx, my, C(my < 72 ? "#d8d4bf" : "#7e8a86")); }
+  var bt = ((PW + 30 - f * 0.4) % (PW + 30) + PW + 30) % (PW + 30) - 14;
+  Wt.rect(bt, 73, 9, 2, C("#0a1c24")); Wt.rect(bt + 2, 71, 4, 2, C("#0a1c24")); Wt.px(bt + 3, 70, C("#ffd27a")); Wt.px(bt - 1, 73, C("#ff6a4a")); Wt.rect(bt + 1, 75, 6, 1, C("#b9873a"));
+  var bt2 = ((PW + 50 - f * 0.25 - 70) % (PW + 50) + PW + 50) % (PW + 50) - 20;
+  Wt.rect(bt2, 70, 12, 2, C("#0a1c24")); Wt.rect(bt2 + 3, 68, 6, 2, C("#0a1c24")); Wt.px(bt2 + 6, 67, C("#8fe3ff")); Wt.px(bt2 + 6, 72, C("#2c7882"));
+  blit(out, Wt, 0);
+  var BR = new Layer(), boff = Math.floor(f * 0.35) % 72; // pont suspendu
+  BR.rect(0, 67, PW, 2, C("#0b2a33")); BR.rect(0, 67, PW, 1, C("#1f5a66"));
+  for (var tx = -72; tx < PW + 72; tx += 72) {
+    var cx = tx - boff + 30;
+    BR.rect(cx - 1, 50, 3, 18, C("#0b2a33")); BR.rect(cx - 2, 50, 5, 1, C("#16424d")); BR.px(cx, 49, C(Math.floor(f / 5) % 2 ? "#ff5a4a" : "#6a1e18"));
+    for (var cxx = cx; cxx <= cx + 72; cxx++) {
+      var tt = (cxx - cx) / 72, cy3 = Math.round(52 + 4 * tt * (1 - tt) * 12);
+      BR.px(cxx, cy3, C("#1f5a66"));
+      if ((cxx - cx) % 6 === 0 && tt > 0.05 && tt < 0.95) { BR.rect(cxx, cy3, 1, 67 - cy3, C("#12404a")); BR.px(cxx, cy3, C("#ffd27a")); }
+    }
+  }
+  blit(out, BR, 0);
+  var P = new Layer(), poff = Math.floor(f * 2) % 72, rl = Math.floor(f * 2) % 8;
+  P.rect(0, 77, PW, 2, C("#1a2230")); P.rect(0, 77, PW, 1, C("#3c4a63"));
+  for (var px2 = -8; px2 < PW + 8; px2 += 8) P.rect(px2 - rl, 73, 1, 5, C("#2a3446"));
+  P.rect(0, 73, PW, 1, C("#3c4a63"));
+  for (var lx = -72; lx < PW + 72; lx += 72) {
+    var bx3 = lx - poff + 40;
+    P.rect(bx3, 48, 2, 30, C("#2a3446")); P.rect(bx3 - 1, 47, 6, 2, C("#2a3446")); P.rect(bx3 + 2, 49, 3, 2, C("#ffe9a8"));
+  }
+  blit(out, P, 0);
+  var lamp = new Layer(); // halo de lampadaire
+  for (var lx2 = -72; lx2 < PW + 72; lx2 += 72) {
+    var bx4 = lx2 - poff + 40;
+    for (var gy = 51; gy < 78; gy++) for (var gx = bx4 - 6; gx < bx4 + 11; gx++) if (((gx + gy + f) % 2) === 0 && Math.abs(gx - (bx4 + 3)) < (gy - 49) * 0.42) lamp.px(gx, gy, C("#6a5d3a"));
+  }
+  blit(out, lamp, 0);
+  var R = new Layer();
+  R.rect(0, 79, PW, 17, C("#1b1f29")); R.rect(0, 79, PW, 1, C("#4a5266")); R.rect(0, 80, PW, 1, C("#2c3242")); R.rect(0, 95, PW, 1, C("#12151c"));
+  var doff = (f * 3) % 16;
+  for (x = -16; x < PW + 16; x += 16) R.rect(x - doff, 92, 8, 1, C("#c8ccd6"));
+  blit(out, R, 0);
+  var SH = new Layer(); SH.rect(26, 88, 84, 2, C("#0d1016")); blit(out, SH, 0);
+}
+
+/* ===== Véhicules (silhouettes reconnaissables) ===== */
+function wheel(W, cx, cy, r, f, rim) {
+  W.disc(cx, cy, r, C("#171922"));
+  W.disc(cx, cy, r - 1, C("#1d2029"), function (x, y) { return (x + y) % 3 === 0 && (x - cx) * (x - cx) + (y - cy) * (y - cy) > (r - 2.2) * (r - 2.2) ? C("#2a2e3a") : 0; });
+  W.disc(cx, cy, r - 3, C(rim));
+  W.disc(cx, cy, r - 3, C(rim), function (x, y) { return (y < cy - 1 && x < cx + 1) ? C(mix(rim, 0.35)) : (y > cy + 2 ? C(mix(rim, -0.2)) : C(rim)); });
+  var sc = C(mix(rim, -0.5));
+  var k = f % 4;
+  if (k === 0) { W.line(cx - r + 4, cy, cx + r - 4, cy, sc); W.line(cx, cy - r + 4, cx, cy + r - 4, sc); }
+  else if (k === 1) { W.line(cx - r + 5, cy - r + 5, cx + r - 5, cy + r - 5, sc); W.line(cx + r - 5, cy - r + 5, cx - r + 5, cy + r - 5, sc); }
+  else if (k === 2) { W.line(cx - r + 4, cy - 1, cx + r - 4, cy + 1, sc); W.line(cx - 1, cy - r + 4, cx + 1, cy + r - 4, sc); }
+  else { W.line(cx - r + 5, cy - r + 6, cx + r - 5, cy + r - 6, sc); W.line(cx + r - 5, cy - r + 6, cx - r + 5, cy + r - 6, sc); }
+  W.disc(cx, cy, 2.3, C("#9aa0ae")); W.disc(cx, cy, 1.2, C("#3a3e4a"));
+  W.px(cx - r + 3, cy - 1, C("#2a2d38"));
+}
+var GOLD = { hi: "#ffe27a", mid: "#f2b631", lo: "#b97a05" };
+var DK = "#14151a", CH = ["#f2f4f8", "#b9bfcb", "#6d7484"];
+function gradeFn(y0, y1, b) { return bandFn(y0, y1, b); }
+function glass(B, pts, topA, topB) { B.poly(pts, C("#6f8696")); B.line(topA[0], topA[1], topB[0], topB[1], C("#cfe6f2"), 1); }
+
+/* --- SYM GTS : maxi-scooter gris, gros coffre noir, grands rétroviseurs --- */
+function scooterSYM(B, f, b) {
+  var s = b || { hi: "#cfd4de", mid: "#9ca3af", lo: "#6c7280" };
+  B.rect(50, 80, 18, 3, C(CH[1])); B.rect(50, 80, 18, 1, C(CH[0]));
+  B.line(30, 56, 36, 50, C(CH[1]), 2); B.line(36, 50, 52, 52, C(CH[1]), 2);                 // poignée passager chromée
+  B.rect(18, 40, 20, 17, C("#14161c")); B.rect(18, 40, 20, 2, C("#3a3f4d")); B.rect(18, 55, 20, 2, C("#0a0b0e")); B.rect(21, 46, 14, 1, C("#262a35")); // gros top-case
+  B.rect(22, 57, 18, 1, C("#2a2d38"));
+  B.poly([[30, 80], [29, 68], [33, 62], [40, 59], [62, 59], [69, 64], [70, 80]], C(s.mid), gradeFn(59, 80, s));
+  B.rect(30, 74, 40, 6, C("#3a3f4c")); B.rect(30, 74, 40, 1, C("#585f70"));                  // bas de caisse noir
+  B.rect(31, 66, 1, 5, C("#e53935"));
+  B.line(38, 68, 64, 66, C(s.lo), 1);
+  B.poly([[38, 58], [40, 52], [46, 51], [48, 55], [66, 55], [68, 58], [64, 60], [40, 60]], C(DK)); B.rect(48, 55, 18, 1, C("#303544")); // selle + dosseret
+  B.rect(68, 77, 20, 3, C("#14161c")); B.rect(66, 79, 24, 2, C(s.mid));
+  B.poly([[84, 80], [92, 80], [100, 72], [105, 62], [104, 53], [98, 49], [92, 52], [88, 64]], C(s.mid), gradeFn(49, 80, s)); // tablier large
+  B.poly([[94, 52], [99, 52], [102, 58], [97, 62]], C("#22252e"));                           // masque noir
+  B.rect(100, 55, 6, 7, C("#f6f2cc")); B.rect(100, 54, 6, 1, C("#9fd6ff")); B.px(105, 66, C("#ff9d2e")); // phare angulaire + LED
+  B.poly([[93, 52], [96, 36], [103, 38], [100, 52]], C("#6f8696")); B.line(96, 36, 103, 38, C("#cfe6f2"), 1); // haut pare-brise
+  B.line(95, 46, 91, 38, C(CH[1]), 2); B.rect(84, 27, 9, 12, C("#aeb4bf")); B.rect(86, 29, 5, 8, C("#14161c")); B.rect(84, 27, 9, 1, C("#e6e9ef")); // grands rétros
+  B.line(91, 50, 101, 48, C(DK), 2); B.rect(101, 47, 3, 3, C("#0a0b0e"));
+  B.line(102, 56, 97, 80, C(CH[1]), 2);                                                      // fourche argent
+  B.line(89, 77, 91, 73, C(s.hi), 3); B.line(91, 73, 97, 71, C(s.hi), 3); B.line(97, 71, 102, 73, C(s.hi), 3); B.line(102, 73, 104, 77, C(s.hi), 3); // garde-boue
+  return { hip: [60, 54], hand: [101, 48], foot: [80, 74], lean: 2, wr: 7, wb: [42, 81], wf: [97, 81], rim: "#aeb4c0", light: [106, 59] };
+}
+
+/* --- Yamaha XMAX : nez acéré, double phare, queue relevée, saute-vent court --- */
+function scooterXMAX(B, f) {
+  var b = bandsOf("#2a4fa6"), dk = bandsOf("#1d2c52");
+  B.rect(50, 80, 18, 3, C(CH[1])); B.rect(50, 80, 18, 1, C(CH[0]));
+  B.line(30, 58, 36, 54, C("#2a2d38"), 2); B.line(36, 54, 48, 55, C("#2a2d38"), 2);          // poignée
+  B.poly([[31, 80], [28, 68], [25, 59], [31, 57], [46, 58], [62, 62], [70, 66], [70, 80]], C(b.mid), gradeFn(57, 80, b)); // queue relevée
+  B.rect(25, 58, 5, 3, C("#e53935")); B.rect(25, 58, 5, 1, C("#ff7a6a"));
+  B.poly([[34, 80], [34, 70], [64, 70], [70, 74], [70, 80]], C(dk.mid));                    // flanc bas sombre
+  for (var i = 0; i < 3; i++) B.line(42 + i * 6, 72, 46 + i * 6, 66, C("#0d1428"), 1);        // ouïes
+  B.line(30, 63, 68, 65, C(b.hi), 1);
+  B.poly([[36, 56], [40, 53], [48, 53], [50, 57], [66, 57], [68, 61], [40, 61]], C(DK)); B.rect(40, 53, 8, 1, C("#303544")); B.rect(50, 57, 16, 1, C("#303544")); // selle étagée
+  B.rect(68, 77, 20, 3, C("#14161c")); B.rect(66, 79, 24, 2, C(b.lo));
+  B.poly([[84, 80], [92, 80], [102, 72], [111, 62], [108, 55], [100, 51], [94, 54], [88, 66]], C(b.mid), gradeFn(51, 80, b)); // nez acéré
+  B.line(98, 56, 109, 60, C("#f6f2cc"), 1); B.line(97, 59, 107, 64, C("#f6f2cc"), 1); B.px(108, 66, C("#ff9d2e")); // double phare
+  B.line(96, 62, 100, 70, C(dk.mid), 2);
+  B.poly([[94, 54], [97, 44], [103, 46], [101, 55]], C("#6f8696")); B.line(97, 44, 103, 46, C("#cfe6f2"), 1);
+  B.rect(95, 40, 6, 4, C(b.mid)); B.rect(96, 41, 4, 2, C("#14161c")); B.line(97, 44, 96, 46, C(DK), 1); // petits rétros
+  B.line(91, 52, 101, 50, C(DK), 2); B.rect(101, 49, 3, 3, C("#0a0b0e"));
+  B.line(102, 58, 97, 80, C(CH[1]), 2);
+  B.line(90, 77, 93, 72, C(b.hi), 2); B.line(93, 72, 99, 70, C(b.hi), 2); B.line(99, 70, 105, 73, C(b.hi), 2); B.line(105, 73, 107, 77, C(b.hi), 2);
+  return { hip: [60, 55], hand: [101, 50], foot: [80, 74], lean: 3, wr: 7, wb: [42, 81], wf: [98, 81], rim: "#aeb4c0", light: [110, 59] };
+}
+
+/* --- Yamaha TMAX : look de moto, bras oscillant alu apparent, tunnel central sculpté --- */
+function scooterTMAX(B, f) {
+  var b = bandsOf("#5a6273"), dk = bandsOf("#262b38"), bl = "#2b6be0";
+  B.line(42, 81, 66, 74, C(CH[1]), 4); B.line(42, 80, 66, 73, C(CH[0]), 1);               // bras oscillant alu
+  B.rect(50, 81, 16, 3, C(CH[1])); B.rect(50, 81, 16, 1, C(CH[0]));
+  B.rect(26, 60, 9, 5, C(dk.mid)); B.rect(25, 61, 2, 3, C("#e53935"));                    // garde-boue arrière + feu
+  B.poly([[34, 78], [33, 68], [36, 60], [46, 57], [60, 60], [68, 66], [68, 78]], C(b.mid), gradeFn(57, 78, b)); // queue courte
+  B.poly([[62, 60], [72, 54], [84, 58], [86, 78], [66, 78]], C(b.mid), gradeFn(54, 78, b));  // tunnel central relevé
+  B.line(38, 70, 66, 66, C(bl), 1); B.line(66, 66, 84, 64, C(bl), 1);
+  B.rect(40, 74, 24, 4, C(dk.mid));
+  B.poly([[38, 58], [41, 54], [46, 53], [48, 56], [64, 56], [68, 59], [64, 61], [40, 61]], C(DK)); B.rect(48, 56, 16, 1, C("#303544")); // selle plate
+  B.rect(72, 77, 16, 3, C("#14161c")); B.rect(72, 79, 16, 1, C(CH[1]));
+  B.poly([[84, 80], [92, 80], [102, 72], [112, 62], [108, 54], [98, 50], [92, 53], [88, 66]], C(b.mid), gradeFn(50, 80, b)); // façade acérée
+  B.poly([[94, 62], [104, 62], [104, 69], [96, 71]], C("#171a22")); B.line(95, 64, 103, 64, C("#2a2f3c"), 1); B.line(95, 67, 103, 67, C("#2a2f3c"), 1); // grandes entrées d'air
+  B.line(98, 55, 110, 59, C("#f6f2cc"), 1); B.line(97, 58, 108, 62, C("#f6f2cc"), 1);        // phare en V
+  B.line(98, 53, 109, 56, C(bl), 1);
+  B.poly([[94, 53], [98, 40], [106, 42], [102, 54]], C("#4d5d6c")); B.line(98, 40, 106, 42, C("#cfe6f2"), 1);
+  B.rect(95, 42, 5, 3, C(b.hi)); B.rect(96, 43, 3, 1, C("#14161c"));
+  B.line(91, 51, 101, 49, C(DK), 2); B.rect(101, 48, 3, 3, C("#0a0b0e"));
+  B.line(103, 57, 98, 80, C(CH[0]), 2);
+  B.line(90, 77, 93, 72, C(b.hi), 2); B.line(93, 72, 99, 69, C(b.hi), 2); B.line(99, 69, 105, 72, C(b.hi), 2);
+  return { hip: [58, 54], hand: [101, 49], foot: [78, 75], lean: 3, wr: 7, wb: [42, 81], wf: [99, 81], rim: "#c9ced8", light: [110, 58] };
+}
+
+/* --- Yamaha Tracer 7 : sport-tourisme caréné, double phare empilé, bicylindre apparent --- */
+function motoTracer(B, f) {
+  var b = bandsOf("#2d3a58"), ac = "#c6f03a", i;
+  B.line(44, 80, 64, 72, C(CH[1]), 3); B.line(44, 79, 64, 71, C(CH[0]), 1);                  // bras oscillant alu
+  B.line(70, 78, 46, 78, C("#9aa0b0"), 3); B.rect(28, 73, 22, 6, C(CH[1])); B.rect(28, 73, 22, 1, C(CH[0])); B.rect(28, 78, 22, 1, C(CH[2])); // silencieux
+  B.poly([[62, 60], [84, 58], [90, 66], [86, 78], [60, 78]], C("#3d4252")); B.rect(62, 59, 22, 2, C("#6a7284")); // moteur
+  for (i = 0; i < 5; i++) B.rect(64 + i * 4, 62, 1, 12, C("#252936"));
+  B.rect(64, 70, 12, 6, C("#4f566a")); B.rect(66, 72, 8, 2, C("#6a7284"));
+  B.line(88, 68, 80, 78, C(CH[1]), 2); B.line(80, 78, 66, 78, C(CH[1]), 2);                   // collecteurs chromés
+  B.rect(92, 64, 6, 11, C("#252936")); for (i = 0; i < 4; i++) B.line(92, 65 + i * 3, 97, 65 + i * 3, C("#4a5266"), 1); // radiateur
+  B.line(94, 52, 64, 66, C("#1e222c"), 2);                                                  // cadre
+  B.poly([[29, 57], [35, 50], [50, 52], [52, 58], [47, 62], [31, 62]], C(b.mid), gradeFn(50, 62, b));  // queue relevée
+  B.rect(27, 55, 3, 3, C("#e53935")); B.line(34, 52, 46, 53, C("#1e222c"), 2);
+  B.poly([[38, 56], [41, 51], [64, 51], [68, 55], [64, 59], [40, 59]], C(DK)); B.rect(41, 51, 23, 1, C("#303544"));
+  B.poly([[64, 54], [70, 47], [88, 47], [94, 52], [90, 61], [68, 61]], C(b.mid), gradeFn(47, 61, b)); // réservoir + flancs
+  B.line(70, 57, 90, 56, C(ac), 1);
+  B.poly([[90, 49], [98, 44], [108, 52], [111, 63], [105, 69], [95, 60]], C(b.mid), gradeFn(44, 69, b)); // nez pointu
+  B.line(94, 63, 108, 58, C(ac), 1);
+  B.rect(104, 51, 6, 3, C("#f6f2cc")); B.rect(105, 56, 6, 3, C("#f6f2cc")); B.rect(104, 54, 6, 1, C("#14161c")); // deux phares empilés
+  B.poly([[93, 46], [97, 32], [105, 34], [102, 48]], C("#6f8696")); B.line(97, 32, 105, 34, C("#cfe6f2"), 1);
+  B.line(89, 47, 99, 44, C(DK), 2); B.rect(99, 43, 3, 3, C("#0a0b0e")); B.rect(94, 40, 4, 3, C(b.hi));
+  B.line(97, 52, 104, 80, C("#aeb4c0"), 2);
+  B.line(98, 72, 101, 68, C(b.mid), 2); B.line(101, 68, 107, 66, C(b.mid), 2); B.line(107, 66, 112, 70, C(b.mid), 2);
+  B.rect(70, 76, 5, 2, C(CH[1]));
+  return { hip: [56, 50], hand: [100, 44], foot: [72, 75], lean: 4, wr: 8, wb: [44, 80], wf: [104, 80], rim: "#2a2d38", light: [110, 55] };
+}
+
+/* --- BMW R 1200 GS : bec, cylindre boxer, arbre de transmission, valises alu --- */
+function motoGS(B, f, gold) {
+  var body = gold ? GOLD : { hi: "#ffffff", mid: "#e8eaf0", lo: "#a9aebb" };
+  var beak = gold ? GOLD : bandsOf("#f2c230");
+  var dark = gold ? { hi: "#ffe27a", mid: "#d99a1c", lo: "#8a5a05" } : { hi: "#4a4f5c", mid: "#2e3138", lo: "#1b1d22" };
+  var pan = gold ? GOLD : { hi: "#eef0f5", mid: "#c4c9d3", lo: "#8a8f9c" }, metal = gold ? ["#fff2a8", "#f2b631", "#b97a05"] : CH, i;
+  var accent = gold ? GOLD.lo : "#2f6fd0";
+  B.line(46, 80, 70, 74, C(metal[1]), 4); B.line(46, 79, 70, 73, C(metal[0]), 1);            // bras oscillant tubulaire
+  B.rect(52, 77, 8, 5, C(metal[1])); B.rect(52, 77, 8, 1, C(metal[0])); // carter de cardan
+  B.rect(30, 72, 18, 4, C(metal[1])); B.rect(30, 72, 18, 1, C(metal[0])); B.rect(30, 75, 18, 1, C(metal[2]));  // silencieux
+  B.rect(24, 52, 22, 18, C(pan.mid), gradeFn(52, 70, pan)); B.rect(24, 52, 22, 1, C(pan.hi)); for (i = 0; i < 3; i++) B.rect(27, 56 + i * 4, 16, 1, C(pan.lo)); // valise alu
+  B.line(24, 52, 56, 47, C("#2a2d38"), 2);                                                  // porte-bagages
+  B.rect(60, 58, 26, 20, C(dark.mid)); B.rect(60, 58, 26, 2, C(dark.hi)); B.rect(60, 76, 26, 2, C(dark.lo)); // carter moteur
+  B.disc(66, 69, 8, C(dark.mid), function (x, y) { return ((y + 1) % 3 === 0) ? C(metal[1]) : C(dark.mid); }); // cylindre boxer (ailettes)
+  B.disc(66, 69, 3, C(metal[0])); B.disc(66, 69, 1.4, C(dark.lo));
+  B.line(86, 70, 96, 66, C("#2a2d38"), 3);                                                  // Telelever
+  B.line(96, 50, 70, 58, C("#1e222c"), 2);
+  B.poly([[38, 52], [40, 46], [62, 46], [66, 50], [62, 55], [40, 55]], C(DK)); B.rect(40, 46, 22, 1, C("#303544"));
+  B.poly([[62, 49], [70, 40], [88, 40], [94, 46], [90, 57], [64, 57]], C(body.mid), gradeFn(40, 57, body)); // grand réservoir
+  B.line(66, 53, 90, 52, C(accent), 1);
+  B.poly([[92, 44], [98, 38], [107, 44], [109, 57], [103, 63], [94, 57]], C(dark.mid), gradeFn(38, 63, dark)); // face avant
+  B.rect(103, 47, 5, 7, C("#f6f2cc")); B.rect(103, 54, 5, 1, C("#9fd6ff")); B.rect(104, 42, 4, 3, C("#f6f2cc")); // phare asymétrique
+  B.poly([[94, 38], [98, 20], [107, 22], [104, 40]], C("#6f8696")); B.line(98, 20, 107, 22, C("#cfe6f2"), 1); // haut pare-brise
+  B.poly([[99, 60], [117, 67], [113, 72], [100, 67]], C(beak.mid), gradeFn(60, 72, beak));   // bec iconique
+  B.line(88, 40, 101, 38, C(DK), 2); B.rect(101, 37, 3, 3, C("#0a0b0e")); B.rect(103, 33, 2, 8, C(DK)); // guidon + protège-mains
+  B.line(98, 50, 105, 80, C(metal[0]), 3);
+  B.rect(66, 74, 5, 2, C(metal[1]));
+  return { hip: [54, 46], hand: [101, 39], foot: [69, 73], lean: 5, wr: 8, wb: [46, 80], wf: [105, 80], rim: gold ? "#ffd75a" : "#c9ced8", light: [109, 52] };
+}
+var VEHICLES = [
+  { n: "SYM GTS", draw: function (B, f) { return scooterSYM(B, f); } },
+  { n: "Yamaha XMAX", draw: function (B, f) { return scooterXMAX(B, f); } },
+  { n: "Yamaha TMAX", draw: function (B, f) { return scooterTMAX(B, f); } },
+  { n: "Yamaha Tracer 7", draw: function (B, f) { return motoTracer(B, f); } },
+  { n: "BMW GS 1200", draw: function (B, f) { return motoGS(B, f, false); } },
+  { n: "BMW GS 1200 Or", draw: function (B, f) { return motoGS(B, f, true); } }
+];
+
+/* ===== Personnage + composition ===== */
+var PX_DEFAULT = { skin: "#e0ac69", hair: "court", hairColor: "#2a211b", helmet: "#d93a3a", vest: "#15171d", pants: "#23262f", shoes: "#3d4150" };
+var PX_SKINS = ["#ffdbb4", "#f1c27d", "#e0ac69", "#c68642", "#8d5524"];
+var PX_HAIRS = [{ k: "court", n: "Court" }, { k: "boucles", n: "Bouclés" }, { k: "long", n: "Long" }, { k: "aucun", n: "Aucun" }];
+var PX_HAIR_COLORS = ["#2a211b", "#5b3a22", "#d9b46a", "#b5532a", "#9aa0aa"];
+var PX_HELMETS = ["#d93a3a", "#3b82c4", "#2f9e8f", "#f2a93b", "#8e5bd6", "#e8e8ee", "#15171d"];
+var PX_VESTS = ["#15171d", "#2b2f3a", "#3b82c4", "#d93a3a", "#2f7d4f", "#e8e8ee"];
+var PX_PANTS = ["#23262f", "#15171d", "#2f3a56", "#4a4f5c", "#5a4a3a"];
+var PX_SHOES = ["#3d4150", "#15171d", "#e8e8ee", "#d93a3a", "#8a8f9c"];
+var MAXT = 5;
+
+function ik(a, b, l1, l2, sgn) {
+  var dx = b[0] - a[0], dy = b[1] - a[1], d = Math.sqrt(dx * dx + dy * dy);
+  d = Math.min(d, l1 + l2 - 0.05);
+  var c = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d); c = Math.max(-1, Math.min(1, c));
+  var th = Math.atan2(dy, dx) + sgn * Math.acos(c);
+  return [a[0] + l1 * Math.cos(th), a[1] + l1 * Math.sin(th)];
+}
+function lerp(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
+
+function drawRider(B, an, o, tr, f) {
+  var M = tr.sport, G = tr.argent, S = tr.etude;
+  var skin = o.skin, skinD = mix(o.skin, -0.2), skinH = mix(o.skin, 0.16), skinDD = mix(o.skin, -0.38);
+  var vest = o.vest, vestH = mix(o.vest, 0.35), vestL = mix(o.vest, -0.3);
+  var hip = an.hip, lean = an.lean;
+  var sh = [hip[0] + lean, hip[1] - 16];
+  var ax = sh[0] - hip[0], ay = sh[1] - hip[1], al = Math.sqrt(ax * ax + ay * ay); ax /= al; ay /= al;
+  var pfx = -ay, pfy = ax;
+  function along(t, w, side) { return [hip[0] + (sh[0] - hip[0]) * t + pfx * w * side, hip[1] + (sh[1] - hip[1]) * t + pfy * w * side]; }
+  var wh = 8 + M * 0.5, wm = 8 + M * 0.9, ws = 9 + M * 1.5;
+  var head = [sh[0] + lean * 0.3 + 1, sh[1] - 9];
+  var neck = [sh[0] + lean * 0.15 + 1, sh[1] - 3];
+  var pantsC = o.pants, shoeC = o.shoes;
+
+  /* cheveux longs derrière */
+  if (o.hair === "long") for (var i = 0; i < 9; i++) { var wy = Math.round(Math.sin((i + f * 1.3) * 0.9)); B.rect(head[0] - 6 - i, head[1] + 1 + wy + Math.floor(i / 4), 1, 3, C(o.hairColor)); }
+
+  /* jambe */
+  var foot = an.foot, dist = Math.sqrt(Math.pow(foot[0] - hip[0], 2) + Math.pow(foot[1] - hip[1], 2));
+  var ll = Math.max(14, dist / 2 + 2.4), knee = ik(hip, foot, ll, ll, -1);
+  var tw = 6 + (M >= 3 ? 1 : 0) + (M >= 5 ? 1 : 0), sw2 = 5 + (M >= 4 ? 1 : 0);
+  B.line(hip[0], hip[1] - 1, knee[0], knee[1], C(pantsC), tw);
+  B.line(knee[0], knee[1], foot[0], foot[1] - 2, C(pantsC), sw2);
+  B.line(hip[0] + 1, hip[1] - 3, knee[0], knee[1] - 2, C(mix(pantsC, 0.3)), 1);
+  B.rect(knee[0] - 1, knee[1] - 3, 3, 2, C(mix(pantsC, 0.4))); B.line(knee[0] - 2, knee[1] + 1, knee[0] + 1, knee[1] + 3, C(mix(pantsC, -0.3)), 1);
+  B.rect(foot[0] - 3, foot[1] - 2, 9, 4, C(shoeC)); B.px(foot[0] + 2, foot[1] - 2, C("#aeb4c0")); B.px(foot[0] + 4, foot[1] - 2, C("#aeb4c0")); B.rect(foot[0] - 3, foot[1] + 1, 9, 1, C(mix(shoeC, -0.4))); B.rect(foot[0] - 3, foot[1] - 2, 9, 1, C(mix(shoeC, 0.3)));
+
+  /* torse */
+  var tor = [along(0, wh / 2, -1), along(0.5, wm / 2, -1), along(1, ws / 2, -1), along(1, ws / 2, 1), along(0.62, wm / 2 + 0.5 + M * 0.5, 1), along(0, wh / 2, 1)];
+  var nude = M >= 5, torn = M === 4;
+  var tl = hip[1] - sh[1];
+  B.poly(tor, C(vest), function (x, y) {
+    var t = (hip[1] - y) / tl; // 0 bas -> 1 haut
+    var lat = (x - (hip[0] + (sh[0] - hip[0]) * t)) / Math.max(1, (ws / 2));
+    if (nude) { // torse nu et musclé
+      var c = skin;
+      if (t > 0.86) c = skinH;
+      var px = Math.round(x - hip[0] - (sh[0] - hip[0]) * t);
+      if (t > 0.5 && t < 0.78 && lat > -0.2 && lat < 0.55 && ((Math.round(t * 20) % 4) === 0)) c = skinD; // pecs
+      if (t > 0.16 && t < 0.5 && (Math.round(t * 20) % 3) === 0 && lat > -0.45 && lat < 0.55) c = skinD; // abdos
+      if (t > 0.1 && t < 0.78 && Math.abs(lat - 0.05) < 0.07) c = skinD; // ligne centrale
+      if (lat < -0.55) c = skinD;
+      return C(c);
+    }
+    if (torn) {
+      var band = (lat + 0.7) - t * 1.3, jag = ((x + y) % 3) * 0.06;
+      if (t > 0.12 && t < 0.9 && Math.abs(band) < 0.24 + jag) return C((x + y) % 4 === 0 ? skinD : skin);
+      if (t > 0.1 && t < 0.35 && lat > 0.3 && (x + y) % 5 === 0) return C(skin);
+    }
+    return lat < -0.35 ? C(vestL) : (t > 0.9 ? C(vestH) : C(vest));
+  });
+  if (!nude) { B.line(hip[0] + 1, hip[1] - 1, sh[0] + 1, sh[1] + 4, C(vestL), 1); }
+  B.rect(hip[0] - 4, hip[1] - 2, wh + 2, 2, C(mix(pantsC, 0.15)));
+  if (M < 4) {
+    B.line(neck[0] + 2, neck[1] + 4, hip[0] + 4, hip[1] - 3, C("#7c8494"), 1);
+    B.rect(neck[0] - 2, neck[1] + 1, 6, 2, C(mix(vest, 0.3)));
+    B.rect(hip[0] - 3, hip[1] - 4, wh + 1, 2, C(vestL));
+  }
+  /* cou */
+  B.rect(neck[0] - 1, neck[1] - 2, 4, 5, C(skinD));
+  /* chaîne */
+  var chain = G >= 1, chainBig = G >= 3, ch = "#f0b429";
+  if (chain) {
+    var c0 = along(0.93, ws / 2 - 2, 1), c1 = along(0.93, -ws / 2 + 3, 1);
+    B.line(neck[0] - 2, neck[1] + 2, neck[0] + 3, neck[1] + 2, C(ch), chainBig ? 2 : 1);
+    B.line(neck[0] - 2, neck[1] + 2, neck[0] + 0, neck[1] + 6, C(ch), 1); B.line(neck[0] + 3, neck[1] + 2, neck[0] + 1, neck[1] + 6, C(ch), 1);
+    if (chainBig) B.rect(neck[0] - 1, neck[1] + 6, 3, 3, C("#ffe27a"));
+    if (G >= 5) B.px(neck[0], neck[1] + 7, C("#ffffff"));
+  }
+  /* tête */
+  var hx = Math.round(head[0]), hy = Math.round(head[1]);
+  B.disc(hx, hy, 6, C(skin));
+  B.rect(hx - 3, hy + 3, 2, 3, C(skinD));
+  B.px(hx + 3, hy + 2, C("#ffffff")); B.px(hx + 3, hy + 3, C("#ffffff")); B.px(hx + 4, hy + 2, C("#16162a")); B.px(hx + 4, hy + 3, C("#16162a"));
+  B.px(hx + 6, hy + 3, C(skinD)); B.px(hx + 6, hy + 4, C(skinD)); B.rect(hx + 3, hy + 5, 3, 1, C("#9a4a3a")); B.px(hx + 4, hy + 4, C(skinH)); B.px(hx + 2, hy + 6, C(skinD));
+  if (o.hair === "court") B.rect(hx - 6, hy + 1, 3, 5, C(o.hairColor));
+  if (o.hair === "boucles") { B.rect(hx - 6, hy + 1, 3, 3, C(o.hairColor)); B.rect(hx - 5, hy + 4, 3, 3, C(o.hairColor)); B.rect(hx - 2, hy + 6, 3, 2, C(o.hairColor)); }
+  if (o.hair === "long") B.rect(hx - 6, hy, 3, 7, C(o.hairColor));
+  /* casque : rouge, devient or avec la richesse */
+  var hb = o.helmet, hbands = { hi: mix(hb, 0.3), mid: hb, lo: mix(hb, -0.3) };
+  B.disc(hx, hy - 1, 7, 0, function (x, y) {
+    if (y > hy + 1) return 0;
+    var t = (y - (hy - 8)) / 9, gx = x - hx, gold = false;
+    if (G === 1) gold = gx >= -1 && gx <= 0;
+    else if (G === 2) gold = t < 0.38;
+    else if (G === 3) gold = t < 0.68 || (gx >= -1 && gx <= 0);
+    else if (G === 4) gold = t < 0.88;
+    else if (G >= 5) gold = true;
+    if (gold) return C(t < 0.25 ? GOLD.hi : (t > 0.8 ? GOLD.lo : GOLD.mid));
+    return C(t < 0.22 ? hbands.hi : (t > 0.8 ? hbands.lo : hbands.mid));
+  });
+  B.rect(hx - 7, hy, 3, 4, C(G >= 5 ? GOLD.lo : hbands.lo));
+  B.px(hx - 3, hy - 6, C("#ffffff")); B.px(hx - 2, hy - 6, C(mix(G >= 5 ? GOLD.hi : hb, 0.65))); B.px(hx - 4, hy - 5, C(mix(G >= 5 ? GOLD.hi : hb, 0.5))); B.px(hx + 1, hy - 7, C(mix(G >= 5 ? GOLD.hi : hb, 0.4)));
+  B.rect(hx + 5, hy - 3, 6, 3, C("#2a2d3a")); B.rect(hx + 5, hy - 3, 6, 1, C("#4a4f60"));
+  B.rect(hx - 6, hy + 1, 13, 1, C(mix(G >= 5 ? GOLD.lo : hb, -0.4)));
+  B.px(hx - 1, hy + 2, C("#2a2d3a")); B.px(hx - 1, hy + 3, C("#2a2d3a"));
+  /* bras */
+  var shoulder = [sh[0] + pfx * 1.5, sh[1] + 3], hd = [an.hand[0] - 1, an.hand[1] + 1];
+  var bd = Math.sqrt(Math.pow(hd[0] - shoulder[0], 2) + Math.pow(hd[1] - shoulder[1], 2));
+  var al1 = Math.max(12, bd / 2 + 0.8), elbow = ik(shoulder, hd, al1, al1, 1);
+  var uw = 4 + M * 0.6, fw = 3 + M * 0.5;
+  uw = Math.round(uw); fw = Math.round(fw);
+  var sleeveOn = M <= 3, tornSleeve = M === 4;
+  B.line(shoulder[0], shoulder[1], elbow[0], elbow[1], C(skin), uw);
+  B.line(elbow[0], elbow[1], hd[0], hd[1], C(skin), fw);
+  if (M >= 3) { // biceps / avant-bras (reflet)
+    var bc = lerp(shoulder, elbow, 0.55), fl = (Math.floor(f / 2) % 2) && M >= 4 ? 1 : 0;
+    B.disc(bc[0], bc[1] - 1 - fl, 1.8 + (M - 3) * 0.7, C(skin), function (x, y) { return y < bc[1] - 1 - fl ? C(skinH) : C(skin); });
+    B.line(elbow[0], elbow[1] - 1, hd[0] - 3, hd[1] - 1, C(skinH), 1);
+  }
+  if (sleeveOn) {
+    B.line(shoulder[0], shoulder[1], elbow[0], elbow[1], C(vest), uw + 1);
+    var wr = lerp(elbow, hd, 0.8);
+    B.line(elbow[0], elbow[1], wr[0], wr[1], C(vest), fw + 1);
+    B.line(shoulder[0], shoulder[1] - 1, elbow[0], elbow[1] - 1, C(vestH), 1);
+    B.rect(wr[0] - 1, wr[1] - Math.round(fw / 2) - 1, 3, fw + 2, C(mix(vest, 0.3)));
+  } else if (tornSleeve) {
+    var cut = lerp(shoulder, elbow, 0.5);
+    B.line(shoulder[0], shoulder[1], cut[0], cut[1], C(vest), uw + 1);
+    for (var r = 0; r < 4; r++) B.px(cut[0] + 1 + r % 2, cut[1] + uw / 2 + (r % 2), C(vest));
+    var sw3 = Math.round(Math.sin(f * 1.1) * 1);
+    B.rect(cut[0] + 2, cut[1] + uw / 2 + 1 + sw3, 3, 1, C(vestL));
+  }
+  if (G >= 2) { var wp = lerp(elbow, hd, 0.86); B.rect(wp[0] - 1, wp[1] - 2, G >= 4 ? 4 : 3, G >= 4 ? 4 : 3, C(G >= 4 ? "#ffe27a" : "#f7c948")); B.px(wp[0], wp[1] - 1, C("#8a5a05")); }
+  B.rect(hd[0] - 1, hd[1] - 2, 5, 5, C(skin)); B.rect(hd[0] + 2, hd[1] - 2, 1, 5, C(skinD));
+  /* chapeau de diplômé, de plus en plus gros et doré */
+  if (S >= 1) {
+    var w = 9 + 3 * S, cx = hx + 1, yb = hy - 10;
+    var board = S >= 5 ? GOLD : (S >= 4 ? { hi: "#ffe27a", mid: "#f2b631", lo: "#b97a05" } : { hi: "#343b50", mid: "#1f2430", lo: "#141824" });
+    var edge = S >= 3 && S < 4 ? "#f0b429" : null;
+    var baseC = S >= 5 ? GOLD.mid : "#1f2430";
+    B.rect(cx - 5, yb + 2, 11, 3, C(baseC)); B.rect(cx - 5, yb + 2, 11, 1, C(S >= 5 ? GOLD.hi : "#343b50"));
+    B.rect(cx - w / 2 + 3, yb - 1, w - 6, 1, C(edge || board.hi));
+    B.rect(cx - w / 2 + 1, yb, w - 2, 1, C(board.mid));
+    B.rect(cx - w / 2 + 3, yb + 1, w - 6, 1, C(edge ? "#b97a05" : board.lo));
+    B.px(cx, yb, C(S >= 3 ? "#ffe27a" : "#343b50"));
+    if (S >= 2) {
+      var tx = cx + Math.floor(w / 2) - 2, swing = (Math.floor(f / 2) % 2) ? 1 : 0;
+      B.line(cx, yb, tx, yb, C("#f0b429"), 1); B.rect(tx + swing, yb + 1, 1, 5, C("#f0b429")); B.px(tx + swing, yb + 6, C("#ffe27a"));
+    }
+  }
+  return { head: [hx, hy], shoulder: shoulder, elbow: elbow, hand: hd, S: S, capY: hy - 10 };
+}
+
+function renderFrame(out, frame, o, tr, anim) {
+  var f = anim ? frame : 0, G = Math.max(0, Math.min(MAXT, tr.argent)), M = tr.sport;
+  tr = { argent: G, etude: tr.etude, sport: M };
+  drawNight(out, f);
+  var OL = C("#34566e"), veh = VEHICLES[G];
+  var W = new Layer(), B = new Layer(), bob = (Math.floor(f / 2) % 2) ? -1 : 0;
+  var an = veh.draw(B, f);
+  // phare : faisceau
+  var beam = new Layer(), lx = an.light[0], ly = an.light[1];
+  for (var bx = lx; bx < Math.min(PW, lx + 24); bx++) for (var by = ly - 6; by < ly + 12; by++) {
+    var half = 1.2 + (bx - lx) * 0.2, cy2 = ly + 1 + (bx - lx) * 0.16;
+    if (Math.abs(by - cy2) < half && ((bx + by + f) % 2 === 0)) beam.px(bx, by, C((bx - lx) < 10 ? "#fff4b0" : "#a89c64"));
+  }
+  blit(out, beam, 0);
+  wheel(W, an.wb[0], an.wb[1], an.wr, f, an.rim); wheel(W, an.wf[0], an.wf[1], an.wr, f, an.rim);
+  var SL = new Layer(); // lignes de vitesse
+  for (var q = 0; q < 6; q++) { var ly2 = 34 + Math.floor(hash(q, 3) * 44), ln = 7 + (q % 3) * 5, sx2 = PW - ((f * (5 + q % 3) + q * 41) % (PW + 30)); SL.rect(sx2, ly2, ln, 1, C(q % 2 ? "#33566a" : "#4a7388")); }
+  blit(out, SL, 0);
+  var bl = new Layer(); // halo du phare
+  for (var gy = ly - 7; gy <= ly + 7; gy++) for (var gx = lx - 7; gx <= lx + 7; gx++) { var dd = Math.sqrt((gx - lx) * (gx - lx) + (gy - ly) * (gy - ly)); if (dd < 7 && ((gx + gy) % 2 === 0) && dd > 2) bl.px(gx, gy, C(dd < 4.5 ? "#d9c98a" : "#7d7348")); }
+  blit(out, bl, 0);
+  outlineSel(W, true); blit(out, W, 0);
+  var rp = drawRider(B, an, o, tr, f);
+  outlineSel(B, true);
+  // éclats d’or (richesse élevée) et chapeau doré
+  if (G >= 4 || tr.etude >= 5) {
+    [[26, 50, 0], [112, 36, 3], [124, 60, 6], [18, 70, 9], [70, 30, 5]].forEach(function (c, k) {
+      var age = (f + c[2]) % 10; if (age > 7) return;
+      var sx = c[0], sy = c[1] - age;
+      B.px(sx, sy, C("#fff6c0")); B.px(sx - 1, sy, C("#ffd75a")); B.px(sx + 1, sy, C("#ffd75a")); B.px(sx, sy - 1, C("#ffd75a")); B.px(sx, sy + 1, C("#ffd75a"));
+    });
+  }
+  // lambeaux de vêtements arrachés
+  if (M >= 4) {
+    var n = M >= 5 ? 9 : 4;
+    for (var i = 0; i < n; i++) {
+      var age2 = (f * 2 + i * 5) % 36; if (age2 > 30) continue;
+      var px2 = rp.shoulder[0] - 4 - age2 * 1.3, py2 = rp.shoulder[1] + 3 + i * 2 + Math.sin(age2 * 0.4 + i) * 3 + age2 * 0.12;
+      B.rect(px2, py2, 2 + (i % 2), 1, C(i % 3 ? "#15171d" : "#262a35"));
+    }
+  }
+  blit(out, B, bob);
+  // pot d’échappement : fumée
+  for (var k = 0; k < 3; k++) {
+    var age3 = (f + k * 3) % 9; if (age3 > 7) continue;
+    var P = new Layer(); P.rect(an.wb[0] - 18 - age3 * 1.4, 80 - age3 * 0.5, age3 < 4 ? 2 : 1, age3 < 4 ? 2 : 1, C("#7f8794")); blit(out, P, 0);
+  }
+  // halo or sous la moto en or
+  if (G >= 5) { var UG = new Layer(); for (var ux = 26; ux < 118; ux++) if (((ux + f) % 3) !== 0) UG.px(ux, 89, C("#f7c948")); blit(out, UG, 0); }
+}
+
 function fmt(h) {
   var hh = Math.floor(h), mm = Math.round((h - hh) * 60);
   return hh + "h" + (mm ? (mm < 10 ? "0" + mm : mm) : "");
 }
-function num(x) { return Math.round(x * 10) / 10; }
+function r2(x) { return Math.round(x * 100) / 100; }
+function fr(x) { return String(r2(x)).replace(".", ","); }
+function weekStart(i) { var d = new Date(WEEK0); d.setDate(d.getDate() + 7 * i); return d; }
+function newId() { return "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 
-/* ---------- État + synchronisation ---------- */
-var LS_KEY = "abdoState2";
+/* ---------- État ---------- */
+var LS_KEY = "abdoState3";
 function norm(p) {
   p = p || {};
-  return { done: p.done || {}, extra: p.extra || {}, lever: p.lever || {}, coucher: p.coucher || {}, reward: p.reward || "", updated: p.updated || 0 };
+  var s = { weeks: p.weeks || {}, lever: p.lever || {}, coucher: p.coucher || {}, reward: p.reward || "", avatar: p.avatar || {},
+            done: p.done || {}, extra: p.extra || {}, updated: p.updated || 0 };
+  Object.keys(s.extra).forEach(function (k) {
+    var v = parseFloat(s.extra[k]) || 0;
+    if (v > 0) {
+      var w = s.weeks[k] = s.weeks[k] || {};
+      w.entries = w.entries || [];
+      w.entries.push({ id: "m" + k, k: "argent", gains: v, charges: 0 });
+    }
+  });
+  s.extra = {};
+  return s;
 }
 var state = norm(null);
 try {
-  var raw = localStorage.getItem(LS_KEY);
+  var raw = localStorage.getItem(LS_KEY) || localStorage.getItem("abdoState2");
   if (raw) state = norm(JSON.parse(raw));
 } catch (e) {}
-function hasData() {
-  return Object.keys(state.done).length || Object.keys(state.extra).length ||
-    Object.keys(state.lever).length || Object.keys(state.coucher).length || state.reward;
-}
 function saveLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
+function hasData() {
+  return Object.keys(state.weeks).length || Object.keys(state.lever).length || Object.keys(state.coucher).length ||
+    Object.keys(state.done).length || Object.keys(state.avatar).length || state.reward;
+}
 
+function realWeekIdx() {
+  var n = new Date();
+  var days = Math.floor((Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()) - Date.UTC(2026, 9, 19)) / 86400000);
+  return Math.max(0, Math.floor(days / 7));
+}
+var cur = realWeekIdx();
+
+function defaultBlocks(i) {
+  var pat = Math.min(i, 2);
+  return build(pat).map(function (e) {
+    var type = e.t === "etude" ? "etude" : e.t === "cours" ? "cours" : "argent";
+    var oldId = (pat + "-" + e.d + "-" + e.s + "-" + e.t).replace(/\./g, "_");
+    return { id: "d" + i + "-" + oldId, day: e.d, start: e.s, end: e.e, type: type, title: e.title,
+             done: i <= 2 && !!state.done[oldId] };
+  });
+}
+function getBlocks(i) { var w = state.weeks[i]; return (w && w.blocks) ? w.blocks : defaultBlocks(i); }
+function ensureWeek(i) {
+  var w = state.weeks[i];
+  if (!w) w = state.weeks[i] = {};
+  if (!w.blocks) w.blocks = defaultBlocks(i);
+  if (!w.entries) w.entries = [];
+  if (!w.goals) w.goals = {};
+  return w;
+}
+function goalsOf(i) {
+  var g = (state.weeks[i] && state.weeks[i].goals) || {};
+  return {
+    etude: g.etude != null ? g.etude : (i === 1 ? 35 : 28),
+    sport: g.sport != null ? g.sport : 3,
+    argent: g.argent != null ? g.argent : 450
+  };
+}
+
+/* ---------- Sauvegarde / synchronisation ---------- */
 var ref = null, dirty = false, writing = false, timer = null;
-var SYNC_TXT = {
-  connecting: "Connexion…", ok: "☁️ Synchronisé", saving: "Synchronisation…",
-  local: "📱 Enregistré sur cet appareil", error: "⚠️ Erreur de synchronisation"
-};
-function setSync(k) { document.getElementById("sync").textContent = SYNC_TXT[k]; }
+var SYNC_TXT = { connecting: "Connexion…", ok: "☁️ Synchronisé", saving: "Synchronisation…", local: "📱 Enregistré sur cet appareil", error: "⚠️ Erreur de synchronisation" };
+function setSync(k) { $("sync").textContent = SYNC_TXT[k]; }
 function persist() {
   state.updated = Date.now();
   saveLocal();
@@ -227,80 +951,54 @@ function persist() {
   clearTimeout(timer);
   timer = setTimeout(flush, 500);
 }
+function clean(o) { return JSON.parse(JSON.stringify(o, function (k, v) { return k.charAt(0) === "_" ? undefined : v; })); }
 async function flush() {
   if (writing) { timer = setTimeout(flush, 300); return; }
   writing = true; dirty = false;
   try {
-    await ref.set({ done: state.done, extra: state.extra, lever: state.lever, coucher: state.coucher, reward: state.reward, updated: state.updated });
+    await ref.set({ weeks: clean(state.weeks), lever: state.lever, coucher: state.coucher, reward: state.reward, avatar: state.avatar,
+                    done: state.done, extra: state.extra, updated: state.updated });
     if (!dirty) setSync("ok");
   } catch (e) { setSync("error"); }
   writing = false;
   if (dirty) timer = setTimeout(flush, 300);
 }
-function toggle(id) {
-  if (state.done[id]) delete state.done[id]; else state.done[id] = 1;
-  persist(); render();
-}
-function toggleDay(kind, key) {
-  var o = state[kind];
-  if (o[key]) delete o[key]; else o[key] = 1;
-  persist(); render();
-}
 
-/* ---------- Affichage ---------- */
-var cur = 0;
-(function pickWeek() {
-  var now = new Date();
-  for (var i = 0; i < WEEKS.length; i++) {
-    var end = new Date(WEEKS[i].start); end.setDate(end.getDate() + 7);
-    if (now < end) { cur = i; return; }
-  }
-  cur = WEEKS.length - 1;
-})();
-
-function totals(w, i) {
-  var t = { studyPossible: 0, studyDone: 0, moneyPossible: 0, moneyDone: 0, studyXP: 0, shiftXP: 0, lever: 0, coucher: 0 };
-  w.ev.forEach(function (e) {
-    var done = !!state.done[e.id];
-    if (e.t === "etude") {
-      t.studyPossible += e.e - e.s;
-      if (done) { t.studyDone += e.e - e.s; t.studyXP += Math.round((e.e - e.s) * 24); }
-    }
-    var m = moneyOf(e);
-    if (m) { t.moneyPossible += m; if (done) { t.moneyDone += m; t.shiftXP += Math.round(m * 0.4); } }
+/* ---------- Calculs ---------- */
+function totals(i) {
+  var w = state.weeks[i] || {};
+  var t = { study: 0, sport: 0, gains: 0, charges: 0, lever: 0, coucher: 0 };
+  getBlocks(i).forEach(function (b) {
+    if (!b.done) return;
+    var h = b.end - b.start;
+    if (b.type === "etude") t.study += h; else if (b.type === "sport") t.sport += h;
   });
-  t.extra = parseFloat(state.extra[i]) || 0;
+  (w.entries || []).forEach(function (e) {
+    if (e.k === "argent") { t.gains += e.gains; t.charges += e.charges; }
+    else if (e.k === "etude") t.study += e.h;
+    else if (e.k === "sport") t.sport += e.h;
+  });
+  t.net = t.gains - t.charges;
   for (var d = 0; d < 7; d++) {
     if (state.lever[i + "-" + d]) t.lever++;
     if (state.coucher[i + "-" + d]) t.coucher++;
   }
-  t.leverXP = t.lever * 20; t.coucherXP = t.coucher * 20;
-  t.bonus = (t.lever >= 5 ? 50 : 0) + (t.studyDone >= w.goal ? 100 : 0) + (t.moneyDone + t.extra >= MGOAL ? 100 : 0);
-  t.xp = t.studyXP + t.shiftXP + t.leverXP + t.coucherXP + t.bonus;
+  var g = goalsOf(i);
+  t.xp = Math.round(t.study * 24) + Math.round(t.sport * 24) + Math.round(Math.max(0, t.net) * 0.4) +
+    t.lever * 20 + t.coucher * 20 +
+    (t.lever >= 5 ? 50 : 0) + (t.study >= g.etude ? 100 : 0) + (t.net >= g.argent ? 100 : 0);
   return t;
 }
-var LEVELS = [
-  { n: "Recrue", x: 0 }, { n: "Apprenti", x: 500 }, { n: "Studieux", x: 1200 }, { n: "Discipliné", x: 2200 },
-  { n: "Régulier", x: 3500 }, { n: "Expert", x: 5000 }, { n: "Maître", x: 7000 }, { n: "Légende", x: 9500 }
-];
-function totalXP() {
-  var sum = 0;
-  WEEKS.forEach(function (w, i) { sum += totals(w, i).xp; });
-  return sum;
+function maxWeek() {
+  var m = Math.max(2, cur);
+  Object.keys(state.weeks).forEach(function (k) { m = Math.max(m, +k); });
+  Object.keys(state.lever).concat(Object.keys(state.coucher)).forEach(function (k) { m = Math.max(m, parseInt(k, 10) || 0); });
+  return m;
 }
-function renderXP() {
-  var xp = totalXP(), l = 0, k;
-  for (k = 0; k < LEVELS.length; k++) if (xp >= LEVELS[k].x) l = k;
-  var cur0 = LEVELS[l].x, nxt = LEVELS[l + 1];
-  var pct = nxt ? (xp - cur0) / (nxt.x - cur0) * 100 : 100;
-  var html = '<div class="lvl">Niveau ' + (l + 1) + ' · ' + LEVELS[l].n + ' <span style="font-weight:400;color:var(--muted)">— ' + xp + ' XP au total</span></div>' +
-    '<div class="bar"><i style="width:' + Math.min(100, pct) + '%"></i></div>' +
-    '<div class="tmsg">' + (nxt ? 'Prochain niveau : ' + nxt.n + ' (reste ' + (nxt.x - xp) + ' XP)' : 'Niveau maximum atteint 🏆') + '</div>';
-  if (state.reward) html += '<div class="tmsg" id="xp-reward"></div>';
-  var el = document.getElementById("xp");
-  el.innerHTML = html;
-  var r = document.getElementById("xp-reward");
-  if (r) r.textContent = "🎁 Récompense visée : " + state.reward;
+function totalXP() {
+  var sum = 0, m = maxWeek();
+  for (var i = 0; i <= m; i++) sum += totals(i).xp;
+  return sum;
 }
 function bedLabel(dt) {
   var days = Math.round((new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) - new Date(2026, 9, 17)) / 86400000);
@@ -308,130 +1006,419 @@ function bedLabel(dt) {
   var h = targets[Math.min(5, Math.max(0, days))];
   return h === 0 ? "minuit" : fmt(h);
 }
-function mini(label, kind, key) {
-  var b = document.createElement("button");
-  b.className = "mini" + (state[kind][key] ? " on" : "");
-  b.textContent = label;
-  b.setAttribute("aria-pressed", state[kind][key] ? "true" : "false");
-  b.onclick = function () { toggleDay(kind, key); };
-  return b;
-}
-function updateProgress() {
-  var w = WEEKS[cur], t = totals(w, cur);
-  var money = t.moneyDone + t.extra;
-  document.getElementById("stats").innerHTML =
-    '<span class="chip">Étude faite : <b>' + num(t.studyDone) + ' / ' + w.goal + ' h</b></span>' +
-    '<span class="chip">Argent gagné : <b>' + num(money) + ' / ' + MGOAL + ' €</b></span>' +
-    '<span class="chip">XP de la semaine : <b>' + t.xp + '</b></span>' +
-    '<span class="chip">Possible : <b>' + num(t.studyPossible) + ' h</b> · min. <b>' + num(t.moneyPossible) + ' €</b></span>';
-  var bm = document.getElementById("b-eur"), bh = document.getElementById("b-h");
-  if (!bm) return;
-  bm.style.width = Math.min(100, money / MGOAL * 100) + "%";
-  bh.style.width = Math.min(100, t.studyDone / w.goal * 100) + "%";
-  bm.className = money >= MGOAL ? "done" : "";
-  bh.className = t.studyDone >= w.goal ? "done" : "";
-  document.getElementById("m-eur").textContent = money >= MGOAL
-    ? "🎯 Objectif atteint !"
-    : num(money) + " / " + MGOAL + " € (reste " + num(MGOAL - money) + " €), dont " + num(t.moneyDone) + " € de shifts cochés";
-  document.getElementById("m-h").textContent = t.studyDone >= w.goal
-    ? "🎯 Objectif atteint !"
-    : num(t.studyDone) + " / " + w.goal + " h (reste " + num(w.goal - t.studyDone) + " h)";
-  var xb = document.getElementById("xp-break");
-  if (xb) xb.textContent = "Étude " + t.studyXP + " + shifts " + t.shiftXP + " + levers " + t.leverXP + " (" + t.lever + "/7) + couchers " + t.coucherXP + " (" + t.coucher + "/7) + bonus " + t.bonus + " = " + t.xp + " XP";
-  renderXP();
-}
-function render() {
-  var w = WEEKS[cur];
-  var tabs = document.getElementById("tabs");
-  tabs.innerHTML = "";
-  WEEKS.forEach(function (x, i) {
-    var b = document.createElement("button");
-    b.className = "tab" + (i === cur ? " on" : "");
-    var end = new Date(x.start); end.setDate(end.getDate() + 6);
-    b.textContent = x.label + " · " + x.start.getDate() + "/" + (x.start.getMonth() + 1) + " → " + end.getDate() + "/" + (end.getMonth() + 1);
-    b.onclick = function () { cur = i; render(); };
-    tabs.appendChild(b);
-  });
-  document.getElementById("note").textContent = w.note;
 
-  var todayStr = new Date().toDateString();
-  var cal = document.getElementById("cal");
+/* ---------- Affichage ---------- */
+function setBar(id, pct) { $(id).style.width = Math.max(0, Math.min(100, pct)) + "%"; }
+function pctOf(v, g) { return g > 0 ? Math.round(Math.max(0, Math.min(100, v / g * 100))) : 0; }
+
+function renderWeekNav() {
+  var a = weekStart(cur), b = weekStart(cur);
+  b.setDate(b.getDate() + 6);
+  $("wk-title").textContent = "Semaine " + (cur + 1);
+  $("wk-range").textContent = a.getDate() + (a.getMonth() !== b.getMonth() ? " " + MONTHS[a.getMonth()] : "") + " – " + b.getDate() + " " + MONTHS[b.getMonth()];
+  $("prev").disabled = cur === 0;
+}
+function renderObjectives() {
+  var t = totals(cur), g = goalsOf(cur);
+  var sleep = t.lever + t.coucher;
+  $("val-sleep").innerHTML = "<b>" + sleep + " / " + SLEEP_TOTAL + "</b> · " + pctOf(sleep, SLEEP_TOTAL) + " %";
+  setBar("bar-sleep", sleep / SLEEP_TOTAL * 100);
+  $("val-etude").innerHTML = "<b>" + fr(t.study) + " / " + fr(g.etude) + " h</b> · " + pctOf(t.study, g.etude) + " %";
+  setBar("bar-etude", t.study / g.etude * 100);
+  $("val-sport").innerHTML = "<b>" + fr(t.sport) + " / " + fr(g.sport) + " h</b> · " + pctOf(t.sport, g.sport) + " %";
+  setBar("bar-sport", t.sport / g.sport * 100);
+  $("val-argent").innerHTML = "<b>" + fr(t.net) + " / " + fr(g.argent) + " €</b> · " + pctOf(t.net, g.argent) + " %";
+  setBar("bar-argent", t.net / g.argent * 100);
+  $("sub-argent").textContent = (t.gains || t.charges) ? "Gains " + fr(t.gains) + " € − charges " + fr(t.charges) + " € = bénéfice net " + fr(t.net) + " €" : "";
+}
+function renderXP() {
+  var xp = totalXP(), l = 0, k;
+  for (k = 0; k < LEVELS.length; k++) if (xp >= LEVELS[k].x) l = k;
+  var nxt = LEVELS[l + 1], c0 = LEVELS[l].x;
+  $("xp-lvl").innerHTML = "Niveau " + (l + 1) + " · " + LEVELS[l].n + " <span>— " + xp + " XP</span>";
+  setBar("xp-bar", nxt ? (xp - c0) / (nxt.x - c0) * 100 : 100);
+  $("xp-msg").textContent = "+" + totals(cur).xp + " XP cette semaine" + (nxt ? " · reste " + (nxt.x - xp) + " XP avant " + nxt.n : " · niveau maximum 🏆");
+}
+
+function layoutDay(list) {
+  list.sort(function (a, b) { return a.start - b.start || a.end - b.end; });
+  var clusters = [], grp = null, grpEnd = -1;
+  list.forEach(function (b) {
+    if (!grp || b.start >= grpEnd) { grp = []; clusters.push(grp); grpEnd = b.end; } else grpEnd = Math.max(grpEnd, b.end);
+    grp.push(b);
+  });
+  clusters.forEach(function (cl) {
+    var cols = [];
+    cl.forEach(function (b) {
+      var c = 0;
+      while (cols[c] !== undefined && cols[c] > b.start) c++;
+      cols[c] = b.end; b._c = c;
+    });
+    cl.forEach(function (b) { b._n = cols.length; });
+  });
+}
+function mkEl(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+
+function renderCalendar() {
+  var ws = weekStart(cur), blocks = getBlocks(cur), todayStr = new Date().toDateString();
+  var cal = $("cal");
   cal.innerHTML = "";
-  cal.appendChild(document.createElement("div")).className = "head";
-  var isToday = [];
+  cal.appendChild(mkEl("div", "head"));
+  var dates = [];
   for (var d = 0; d < 7; d++) {
-    var dt = new Date(w.start); dt.setDate(dt.getDate() + d);
-    isToday[d] = dt.toDateString() === todayStr;
-    var hd = document.createElement("div");
-    hd.className = "head" + (isToday[d] ? " today" : "");
-    hd.innerHTML = DAYS[d] + "<small>" + dt.getDate() + "/" + (dt.getMonth() + 1) + "</small>";
-    hd.appendChild(mini("☀️ Lever 7h", "lever", cur + "-" + d));
-    hd.appendChild(mini("🌙 Coucher " + bedLabel(dt), "coucher", cur + "-" + d));
-    cal.appendChild(hd);
+    var dt = new Date(ws); dt.setDate(dt.getDate() + d);
+    dates.push(dt);
+    cal.appendChild(mkEl("div", "head" + (dt.toDateString() === todayStr ? " today" : ""), DAYS[d] + "<small>" + dt.getDate() + "/" + (dt.getMonth() + 1) + "</small>"));
   }
-  var tm = document.createElement("div");
-  tm.className = "times";
-  for (var h = START; h < END; h++) {
-    var s = document.createElement("span");
-    s.style.top = ((h - START) * H) + "px";
-    s.textContent = h + " h";
-    tm.appendChild(s);
+  cal.appendChild(mkEl("div", "scell first srow-top"));
+  for (var u = 0; u < 7; u++) {
+    var cu = mkEl("div", "scell srow-top" + (dates[u].toDateString() === todayStr ? " today" : ""));
+    cu.appendChild(sleepBtn("lever", cur + "-" + u, "", "☀️ Lever 7h"));
+    cal.appendChild(cu);
   }
+  var tm = mkEl("div", "times");
+  for (var h = START; h < END; h++) { var sp = mkEl("span", "", h + " h"); sp.style.top = ((h - START) * H) + "px"; tm.appendChild(sp); }
   cal.appendChild(tm);
   for (var c = 0; c < 7; c++) {
-    var col = document.createElement("div");
-    col.className = "col" + (isToday[c] ? " today" : "");
-    w.ev.filter(function (e) { return e.d === c; }).forEach(function (e) {
-      var el = document.createElement("div");
-      var done = !!state.done[e.id];
-      el.className = "ev " + e.t + (e.warn ? " warn" : "") + (CHECKABLE[e.t] ? " click" : "") + (done ? " done" : "");
-      var l = e.l || 0, wd = e.w || 1;
-      el.style.top = ((e.s - START) * H) + "px";
-      el.style.height = ((e.e - e.s) * H - 2) + "px";
-      el.style.left = (l * 100 + 2) + "%";
-      el.style.width = (wd * 100 - 4) + "%";
-      var m = moneyOf(e);
-      el.innerHTML = "<b>" + e.title + "</b>" + (e.sub || (fmt(e.s) + " – " + fmt(e.e))) +
-        (m ? "<br><b>+ " + m + " € min.</b>" : "");
-      if (CHECKABLE[e.t]) {
-        var chk = document.createElement("span");
-        chk.className = "chk";
-        chk.textContent = done ? "✓" : "";
-        el.appendChild(chk);
-        el.setAttribute("role", "checkbox");
-        el.setAttribute("aria-checked", done ? "true" : "false");
-        el.setAttribute("tabindex", "0");
-        el.onclick = function () { toggle(e.id); };
-        el.onkeydown = function (ev2) { if (ev2.key === "Enter" || ev2.key === " ") { ev2.preventDefault(); toggle(e.id); } };
-      }
-      col.appendChild(el);
-    });
+    var col = mkEl("div", "col" + (dates[c].toDateString() === todayStr ? " today" : ""));
+    var list = blocks.filter(function (b) { return b.day === c; });
+    layoutDay(list);
+    list.forEach(function (b) { col.appendChild(blockEl(b)); });
     cal.appendChild(col);
   }
-
-  var tr = document.getElementById("track");
-  tr.innerHTML = "<h2>Suivi de la semaine : " + w.label + "</h2>" +
-    '<div class="trow"><div>Argent</div><div><div class="bar"><i id="b-eur"></i></div><div class="tmsg" id="m-eur"></div>' +
-    '<div class="extra"><label for="in-extra">Argent en plus (pourboires, bonus) :</label><input id="in-extra" type="number" min="0" step="5" placeholder="0" value="' + (state.extra[cur] || "") + '"> €</div></div></div>' +
-    '<div class="trow"><div>Étude</div><div><div class="bar"><i id="b-h"></i></div><div class="tmsg" id="m-h"></div></div></div>' +
-    '<div class="trow"><div>XP</div><div class="tmsg" id="xp-break" style="margin:0"></div></div>' +
-    '<div class="extra"><label for="in-reward">Récompense au prochain niveau :</label><input id="in-reward" type="text" maxlength="60" placeholder="ex. une sortie, un resto…"></div>' +
-    '<div class="tmsg" style="margin-top:8px">Coche chaque bloc ou shift une fois fait : l’argent, les heures et les XP se calculent tout seuls.</div>';
-  document.getElementById("in-reward").value = state.reward || "";
-  document.getElementById("in-reward").oninput = function () {
-    state.reward = this.value.slice(0, 60);
-    persist(); renderXP();
-  };
-  document.getElementById("in-extra").oninput = function () {
-    var v = parseFloat(this.value);
-    if (v > 0) state.extra[cur] = v; else delete state.extra[cur];
-    persist(); updateProgress();
-  };
-  updateProgress();
+  cal.appendChild(mkEl("div", "scell first srow-bottom"));
+  for (var v = 0; v < 7; v++) {
+    var cv = mkEl("div", "scell srow-bottom" + (dates[v].toDateString() === todayStr ? " today" : ""));
+    cv.appendChild(sleepBtn("coucher", cur + "-" + v, "", "🌙 Coucher " + bedLabel(dates[v])));
+    cal.appendChild(cv);
+  }
 }
-render();
+function sleepBtn(kind, key, pos, label) {
+  var b = mkEl("button", "sl" + (state[kind][key] ? " on" : ""), label);
+  b.setAttribute("aria-pressed", state[kind][key] ? "true" : "false");
+  b.onclick = function () {
+    if (state[kind][key]) delete state[kind][key]; else state[kind][key] = 1;
+    persist(); renderAll();
+  };
+  return b;
+}
+function blockEl(b) {
+  var el = mkEl("div", "ev " + b.type + (b._n > 1 ? " over" : "") + (b.done ? " done" : ""));
+  var s = Math.max(START, b.start), e = Math.min(END, b.end);
+  el.style.top = ((s - START) * H) + "px";
+  el.style.height = (Math.max(14, (e - s) * H - 2)) + "px";
+  el.style.left = (b._c / b._n * 100 + 1) + "%";
+  el.style.width = (100 / b._n - 2) + "%";
+  el.innerHTML = "<b></b>" + ((e - s) >= 0.75 ? fmt(b.start) + " – " + fmt(b.end) : "");
+  el.firstChild.textContent = b.title;
+  el.setAttribute("role", "button"); el.setAttribute("tabindex", "0");
+  el.onclick = function () { openBlockForm(b.id); };
+  el.onkeydown = function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openBlockForm(b.id); } };
+  if (CHECKABLE[b.type]) {
+    var chk = mkEl("button", "chk", b.done ? "✓" : "");
+    chk.setAttribute("aria-label", "Marquer comme fait");
+    chk.setAttribute("aria-pressed", b.done ? "true" : "false");
+    chk.onclick = function (ev) {
+      ev.stopPropagation();
+      var blk = ensureWeek(cur).blocks.filter(function (x) { return x.id === b.id; })[0];
+      if (blk) { blk.done = !blk.done; persist(); renderAll(); }
+    };
+    el.appendChild(chk);
+  }
+  return el;
+}
+function renderHistory() {
+  var w = state.weeks[cur], list = (w && w.entries) || [], box = $("history");
+  box.hidden = !list.length;
+  if (!list.length) { box.innerHTML = ""; return; }
+  box.innerHTML = "";
+  list.forEach(function (e) {
+    var row = mkEl("div", "hrow");
+    var txt = e.k === "argent"
+      ? "💶 + " + fr(e.gains - e.charges) + " €<small>Gains " + fr(e.gains) + " € − charges " + fr(e.charges) + " €</small>"
+      : (e.k === "etude" ? "📚 + " : "🏃 + ") + fr(e.h) + " h";
+    row.appendChild(mkEl("div", "", txt));
+    var del = mkEl("button", "hdel", "✕");
+    del.setAttribute("aria-label", "Supprimer cet ajout");
+    del.onclick = function () {
+      var ww = ensureWeek(cur);
+      ww.entries = ww.entries.filter(function (x) { return x.id !== e.id; });
+      persist(); renderAll();
+    };
+    row.appendChild(del);
+    box.appendChild(row);
+  });
+}
+function renderAll() { renderWeekNav(); renderAvatar(); renderObjectives(); renderXP(); renderCalendar(); renderHistory(); }
 
-/* Version autonome : les données restent dans le navigateur de l’appareil. */
+/* ---------- Fenêtres ---------- */
+function openModal(html) { $("sheet").innerHTML = html; $("modal").hidden = false; }
+function closeModal() { if (typeof avDrop === "function") avDrop("prev"); $("modal").hidden = true; $("sheet").innerHTML = ""; $("sheet").className = "sheet"; $("sheet").onclick = null; }
+$("modal").addEventListener("click", function (e) { if (e.target === $("modal")) closeModal(); });
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
+function head(title) { return '<h2>' + title + '<button class="x" id="m-x" aria-label="Fermer">✕</button></h2>'; }
+function bindClose() { $("m-x").onclick = closeModal; if ($("m-cancel")) $("m-cancel").onclick = closeModal; }
+function numVal(id) { var v = parseFloat(String($(id).value).replace(",", ".")); return isNaN(v) ? 0 : Math.max(0, v); }
+
+function dayOptions(sel) {
+  var ws = weekStart(cur), out = "";
+  for (var d = 0; d < 7; d++) {
+    var dt = new Date(ws); dt.setDate(dt.getDate() + d);
+    out += '<option value="' + d + '"' + (d === sel ? " selected" : "") + ">" + DAYS_LONG[d] + " " + dt.getDate() + "/" + (dt.getMonth() + 1) + "</option>";
+  }
+  return out;
+}
+function timeOptions(from, to, sel) {
+  var out = "";
+  for (var h = from; h <= to + 1e-9; h += 0.25) out += '<option value="' + h + '"' + (Math.abs(h - sel) < 1e-6 ? " selected" : "") + ">" + fmt(h) + "</option>";
+  return out;
+}
+function openBlockForm(id) {
+  var blk = id ? getBlocks(cur).filter(function (x) { return x.id === id; })[0] : null;
+  var type = blk ? blk.type : "etude";
+  var isCours = type === "cours";
+  var html = head(blk ? "Modifier le bloc" : "Nouveau bloc");
+  if (!isCours) {
+    html += '<label>Type</label><div class="types">' + Object.keys(TYPES).map(function (k) {
+      return '<button type="button" class="tbtn ' + k + (k === type ? " sel" : "") + '" data-t="' + k + '"><span>' + TYPES[k].icon + '</span>' + TYPES[k].label + '</button>';
+    }).join("") + "</div>";
+  } else {
+    html += '<div class="sub" style="margin:0 0 4px"></div>';
+  }
+  html += '<label for="f-day">Jour</label><select id="f-day">' + dayOptions(blk ? blk.day : 0) + "</select>" +
+    '<div class="row2"><div><label for="f-start">Début</label><select id="f-start">' + timeOptions(7, 22.75, blk ? blk.start : 9) + "</select></div>" +
+    '<div><label for="f-end">Fin</label><select id="f-end">' + timeOptions(7.25, 23, blk ? blk.end : 11) + "</select></div></div>" +
+    '<div class="err" id="f-err"></div>' +
+    '<div class="btns">' + (blk ? '<button class="btn danger" id="f-del">Supprimer</button>' : '<button class="btn" id="m-cancel">Annuler</button>') +
+    '<button class="btn primary" id="f-save">Enregistrer</button></div>';
+  openModal(html);
+  bindClose();
+  if (isCours) $("sheet").querySelector(".sub").textContent = blk.title;
+  var sel = type;
+  Array.prototype.forEach.call($("sheet").querySelectorAll(".tbtn"), function (btn) {
+    btn.onclick = function () {
+      sel = btn.getAttribute("data-t");
+      Array.prototype.forEach.call($("sheet").querySelectorAll(".tbtn"), function (x) { x.classList.toggle("sel", x === btn); });
+    };
+  });
+  $("f-save").onclick = function () {
+    var day = parseInt($("f-day").value, 10), s = parseFloat($("f-start").value), e = parseFloat($("f-end").value);
+    if (!(e > s)) { $("f-err").textContent = "L’heure de fin doit être après le début."; return; }
+    var w = ensureWeek(cur);
+    if (blk) {
+      var b = w.blocks.filter(function (x) { return x.id === blk.id; })[0];
+      if (b) {
+        if (!isCours && sel !== b.type) {
+          var oldDefault = b.type === "argent" ? TYPES.argent.title : TYPES[b.type].label;
+          if (b.title === oldDefault) b.title = sel === "argent" ? TYPES.argent.title : TYPES[sel].label;
+          b.type = sel;
+        }
+        b.day = day; b.start = s; b.end = e;
+      }
+    } else {
+      w.blocks.push({ id: newId(), day: day, start: s, end: e, type: sel, title: sel === "argent" ? TYPES.argent.title : TYPES[sel].label, done: false });
+    }
+    persist(); closeModal(); renderAll();
+  };
+  if (blk) {
+    var armed = false;
+    $("f-del").onclick = function () {
+      if (!armed) { armed = true; this.textContent = "Confirmer"; return; }
+      var w = ensureWeek(cur);
+      w.blocks = w.blocks.filter(function (x) { return x.id !== blk.id; });
+      persist(); closeModal(); renderAll();
+    };
+  }
+}
+function openGains() {
+  openModal(head("Ajouter mes gains") +
+    '<label for="g-gains">Combien as-tu gagné ? (€)</label><input id="g-gains" type="number" inputmode="decimal" min="0" step="any" placeholder="0">' +
+    '<label for="g-ch">Quelles sont tes charges ? Essence, etc. (€)</label><input id="g-ch" type="number" inputmode="decimal" min="0" step="any" placeholder="0">' +
+    '<div class="net"><span>Bénéfice net</span><b id="g-net">0 €</b></div><div class="err" id="g-err"></div>' +
+    '<div class="btns"><button class="btn" id="m-cancel">Annuler</button><button class="btn primary" id="g-save">Ajouter</button></div>');
+  bindClose();
+  function upd() { var n = numVal("g-gains") - numVal("g-ch"); $("g-net").textContent = fr(n) + " €"; }
+  $("g-gains").oninput = upd; $("g-ch").oninput = upd;
+  $("g-save").onclick = function () {
+    var g = numVal("g-gains"), c = numVal("g-ch");
+    if (!g && !c) { $("g-err").textContent = "Entre au moins un montant."; return; }
+    ensureWeek(cur).entries.push({ id: newId(), k: "argent", gains: g, charges: c });
+    persist(); closeModal(); renderAll();
+  };
+  $("g-gains").focus();
+}
+function openHours(kind) {
+  var label = kind === "etude" ? "d’étude" : "de sport";
+  openModal(head("Ajouter des heures " + label) +
+    '<label for="h-val">Nombre d’heures</label><input id="h-val" type="number" inputmode="decimal" min="0" step="0.25" placeholder="0">' +
+    '<div class="chips"><button class="chip" data-v="0.5">+ 0,5 h</button><button class="chip" data-v="1">+ 1 h</button><button class="chip" data-v="2">+ 2 h</button></div>' +
+    '<div class="err" id="h-err"></div>' +
+    '<div class="btns"><button class="btn" id="m-cancel">Annuler</button><button class="btn primary" id="h-save">Ajouter</button></div>');
+  bindClose();
+  Array.prototype.forEach.call($("sheet").querySelectorAll(".chip"), function (c) {
+    c.onclick = function () { $("h-val").value = r2(numVal("h-val") + parseFloat(c.getAttribute("data-v"))); };
+  });
+  $("h-save").onclick = function () {
+    var h = numVal("h-val");
+    if (!(h > 0)) { $("h-err").textContent = "Entre un nombre d’heures."; return; }
+    ensureWeek(cur).entries.push({ id: newId(), k: kind, h: h });
+    persist(); closeModal(); renderAll();
+  };
+  $("h-val").focus();
+}
+function openGoal(kind) {
+  var g = goalsOf(cur)[kind], unit = kind === "argent" ? "€" : "h";
+  var name = kind === "etude" ? "d’étude" : kind === "sport" ? "de sport" : "d’argent";
+  openModal(head("Objectif " + name) +
+    '<label for="o-val">Objectif de la semaine (' + unit + ')</label><input id="o-val" type="number" inputmode="decimal" min="0" step="any" value="' + g + '">' +
+    '<div class="err" id="o-err"></div>' +
+    '<div class="btns"><button class="btn" id="m-cancel">Annuler</button><button class="btn primary" id="o-save">Enregistrer</button></div>');
+  bindClose();
+  $("o-save").onclick = function () {
+    var v = numVal("o-val");
+    if (!(v > 0)) { $("o-err").textContent = "Entre un objectif supérieur à 0."; return; }
+    ensureWeek(cur).goals[kind] = v;
+    persist(); closeModal(); renderAll();
+  };
+}
+
+/* ---------- Boutons ---------- */
+$("prev").onclick = function () { if (cur > 0) { cur--; renderAll(); } };
+$("next").onclick = function () { cur++; renderAll(); };
+$("add-block").onclick = function () { openBlockForm(null); };
+$("add-gains").onclick = openGains;
+$("add-etude").onclick = function () { openHours("etude"); };
+$("add-sport").onclick = function () { openHours("sport"); };
+Array.prototype.forEach.call(document.querySelectorAll(".edit"), function (b) {
+  b.onclick = function () { openGoal(b.getAttribute("data-goal")); };
+});
+$("in-reward").value = state.reward || "";
+$("in-reward").oninput = function () { state.reward = this.value.slice(0, 60); persist(); };
+
+/* ---------- Avatar pixel art : affichage, personnalisation, semaines ---------- */
+function getAv() { var o = {}; for (var k in PX_DEFAULT) o[k] = (state.avatar && state.avatar[k]) || PX_DEFAULT[k]; return o; }
+function tiersOf(i) {
+  var t = totals(i), g = goalsOf(i);
+  function tr(v, goal) { var p = goal > 0 ? v / goal : 0; return p >= 1 ? 5 : Math.max(0, Math.floor(p * 5)); }
+  return { argent: tr(t.net, g.argent), etude: tr(t.study, g.etude), sport: tr(t.sport, g.sport) };
+}
+function weekStatus(i) {
+  var a = weekStart(i), b = weekStart(i + 1), n = new Date();
+  return n >= b ? "Terminée" : (n < a ? "À venir" : "En cours");
+}
+var avReduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+var avTargets = [], avFrame = 0, avFlash = 0, lastTiers = null, lastTiersWeek = -1;
+function avMake(el, get, still, id) {
+  var ctx = el.getContext("2d"), img = ctx.createImageData(PW, PH);
+  var tg = { el: el, ctx: ctx, img: img, d32: new Uint32Array(img.data.buffer), get: get, still: !!still, id: id || "" };
+  avTargets.push(tg); return tg;
+}
+function avDrop(id) { avTargets = avTargets.filter(function (t) { return t.id !== id; }); }
+function applyFlash(d32, amt) {
+  for (var i = 0; i < d32.length; i++) { var c = d32[i], r = c & 255, g = (c >> 8) & 255, b = (c >> 16) & 255; r += (255 - r) * amt; g += (255 - g) * amt; b += (255 - b) * amt; d32[i] = ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0; }
+}
+function avPaint(tg, frame, flash) {
+  var a = tg.get();
+  renderFrame(tg.d32, frame, a.o, a.tr, !tg.still && !avReduced);
+  if (flash > 0) applyFlash(tg.d32, Math.min(0.75, flash * 0.11));
+  tg.ctx.putImageData(tg.img, 0, 0);
+}
+function avTick(ts) {
+  var fr = Math.floor(ts / 100);
+  if (fr !== avFrame) {
+    avFrame = fr;
+    if (!avReduced || avFlash > 0) {
+      avTargets.forEach(function (tg) { if (!tg.still && document.body.contains(tg.el)) avPaint(tg, fr, tg.id === "main" ? avFlash : 0); });
+      if (avFlash > 0) avFlash--;
+    }
+  }
+  requestAnimationFrame(avTick);
+}
+var mainTarget = null;
+function renderAvatar() {
+  var tr = tiersOf(cur), o = getAv();
+  if (lastTiers && lastTiersWeek === cur && (tr.argent > lastTiers.argent || tr.etude > lastTiers.etude || tr.sport > lastTiers.sport)) avFlash = 8;
+  lastTiers = tr; lastTiersWeek = cur;
+  $("av-title").textContent = "Avatar de la semaine " + (cur + 1);
+  $("av-status").textContent = weekStatus(cur);
+  if (!mainTarget) mainTarget = avMake($("av-canvas"), function () { return { o: getAv(), tr: tiersOf(cur) }; }, false, "main");
+  avPaint(mainTarget, avFrame, avFlash);
+  $("av-badges").innerHTML = '<span class="avbadge">💶 ' + VEHICLES[tr.argent].n + '</span><span class="avbadge">📚 Intelligence ' + tr.etude + '/5</span><span class="avbadge">🏃 Muscles ' + tr.sport + '/5</span>';
+}
+function openWeeks() {
+  var last = realWeekIdx();
+  Object.keys(state.weeks).forEach(function (k) { last = Math.max(last, +k); });
+  last = Math.max(last, cur);
+  openModal(head("Mes semaines") + '<div class="wgrid" id="wg"></div>');
+  $("sheet").className = "sheet wide";
+  bindClose();
+  var grid = $("wg");
+  for (var i = 0; i <= last; i++) {
+    (function (i) {
+      var tr = tiersOf(i), t = totals(i), g = goalsOf(i);
+      var a = weekStart(i), b = weekStart(i); b.setDate(b.getDate() + 6);
+      var card = mkEl("button", "wcard" + (i === cur ? " sel" : ""));
+      card.type = "button";
+      var cv = document.createElement("canvas"); cv.width = PW; cv.height = PH; card.appendChild(cv);
+      var tg = { el: cv, ctx: cv.getContext("2d"), still: true };
+      tg.img = tg.ctx.createImageData(PW, PH); tg.d32 = new Uint32Array(tg.img.data.buffer);
+      renderFrame(tg.d32, 2, getAv(), tr, false); tg.ctx.putImageData(tg.img, 0, 0);
+      var info = mkEl("div", "wt");
+      info.innerHTML = '<b>Semaine ' + (i + 1) + '</b>' + a.getDate() + (a.getMonth() !== b.getMonth() ? " " + MONTHS[a.getMonth()] : "") + " – " + b.getDate() + " " + MONTHS[b.getMonth()] + " · " + weekStatus(i) +
+        '<div class="wst">' + VEHICLES[tr.argent].n + '<br>💶 ' + pctOf(t.net, g.argent) + ' % · 📚 ' + pctOf(t.study, g.etude) + ' % · 🏃 ' + pctOf(t.sport, g.sport) + ' %</div>';
+      card.appendChild(info);
+      card.onclick = function () { cur = i; closeModal(); renderAll(); };
+      grid.appendChild(card);
+    })(i);
+  }
+}
+function swatches(k, list, cur0) {
+  return '<div class="sw-row">' + list.map(function (c) {
+    return '<button type="button" class="sw' + (c === cur0 ? " sel" : "") + '" data-k="' + k + '" data-v="' + c + '" style="background:' + c + '" aria-label="Couleur ' + c + '"></button>';
+  }).join("") + "</div>";
+}
+function options(k, list, cur0) {
+  return '<div class="sw-row">' + list.map(function (x) {
+    return '<button type="button" class="opt' + (x.k === cur0 ? " sel" : "") + '" data-k="' + k + '" data-v="' + x.k + '">' + x.n + "</button>";
+  }).join("") + "</div>";
+}
+function openCustom() {
+  var w = getAv(), real = tiersOf(cur), mode = "real";
+  openModal(head("Personnaliser mon avatar") +
+    '<div class="seg"><button type="button" class="sel" data-m="real">Mon niveau</button><button type="button" data-m="max">Niveau maximum</button></div>' +
+    '<div class="avprev"><canvas id="cp-canvas" width="144" height="96"></canvas></div>' +
+    '<label>Peau</label>' + swatches("skin", PX_SKINS, w.skin) +
+    '<label>Cheveux</label>' + options("hair", PX_HAIRS, w.hair) + '<div style="height:8px"></div>' + swatches("hairColor", PX_HAIR_COLORS, w.hairColor) +
+    '<label>Casque (avant l’or)</label>' + swatches("helmet", PX_HELMETS, w.helmet) +
+    '<label>Gilet</label>' + swatches("vest", PX_VESTS, w.vest) +
+    '<label>Pantalon</label>' + swatches("pants", PX_PANTS, w.pants) +
+    '<label>Chaussures</label>' + swatches("shoes", PX_SHOES, w.shoes) +
+    '<div class="btns"><button class="btn" id="m-cancel">Annuler</button><button class="btn primary" id="cp-save">Enregistrer</button></div>');
+  $("sheet").className = "sheet";
+  bindClose();
+  var tg = avMake($("cp-canvas"), function () { return { o: w, tr: mode === "max" ? { argent: 5, etude: 5, sport: 5 } : real }; }, false, "prev");
+  avPaint(tg, avFrame, 0);
+  $("sheet").onclick = function (e) {
+    var el = e.target.closest ? e.target.closest("button") : null;
+    if (!el) return;
+    var m = el.getAttribute("data-m"), k = el.getAttribute("data-k");
+    if (m) {
+      mode = m;
+      Array.prototype.forEach.call($("sheet").querySelectorAll(".seg button"), function (b) { b.classList.toggle("sel", b === el); });
+      avPaint(tg, avFrame, 0);
+    } else if (k) {
+      w[k] = el.getAttribute("data-v");
+      Array.prototype.forEach.call($("sheet").querySelectorAll('[data-k="' + k + '"]'), function (b) { b.classList.toggle("sel", b === el); });
+      avPaint(tg, avFrame, 0);
+    }
+  };
+  $("cp-save").onclick = function () { state.avatar = w; persist(); closeModal(); renderAll(); };
+}
+$("av-custom").onclick = openCustom;
+$("av-weeks").onclick = openWeeks;
+requestAnimationFrame(avTick);
+
+renderAll();
 setSync("local");
 </script>
 </body>
