@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Agenda">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#5b7fae">
 <title>Agenda d’Abdo</title>
 <style>
@@ -541,51 +541,58 @@ function scooterSYM(B, f, b) {
   return { hip: [60, 54], hand: [101, 48], foot: [80, 74], lean: 2, wr: 7, wb: [42, 81], wf: [97, 81], rim: "#aeb4c0", light: [106, 59] };
 }
 
-/* --- Yamaha XMAX : nez acéré, double phare, queue relevée, saute-vent court --- */
+/* --- Yamaha XMAX : urbain agressif, queue très relevée, double X lumineux, grandes ouïes --- */
 function scooterXMAX(B, f) {
-  var b = bandsOf("#2a4fa6"), dk = bandsOf("#1d2c52");
-  B.rect(50, 80, 18, 3, C(CH[1])); B.rect(50, 80, 18, 1, C(CH[0]));
-  B.line(30, 58, 36, 54, C("#2a2d38"), 2); B.line(36, 54, 48, 55, C("#2a2d38"), 2);          // poignée
-  B.poly([[31, 80], [28, 68], [25, 59], [31, 57], [46, 58], [62, 62], [70, 66], [70, 80]], C(b.mid), gradeFn(57, 80, b)); // queue relevée
-  B.rect(25, 58, 5, 3, C("#e53935")); B.rect(25, 58, 5, 1, C("#ff7a6a"));
-  B.poly([[34, 80], [34, 70], [64, 70], [70, 74], [70, 80]], C(dk.mid));                    // flanc bas sombre
-  for (var i = 0; i < 3; i++) B.line(42 + i * 6, 72, 46 + i * 6, 66, C("#0d1428"), 1);        // ouïes
-  B.line(30, 63, 68, 65, C(b.hi), 1);
-  B.poly([[36, 56], [40, 53], [48, 53], [50, 57], [66, 57], [68, 61], [40, 61]], C(DK)); B.rect(40, 53, 8, 1, C("#303544")); B.rect(50, 57, 16, 1, C("#303544")); // selle étagée
-  B.rect(68, 77, 20, 3, C("#14161c")); B.rect(66, 79, 24, 2, C(b.lo));
-  B.poly([[84, 80], [92, 80], [102, 72], [111, 62], [108, 55], [100, 51], [94, 54], [88, 66]], C(b.mid), gradeFn(51, 80, b)); // nez acéré
-  B.line(98, 56, 109, 60, C("#f6f2cc"), 1); B.line(97, 59, 107, 64, C("#f6f2cc"), 1); B.px(108, 66, C("#ff9d2e")); // double phare
-  B.line(96, 62, 100, 70, C(dk.mid), 2);
-  B.poly([[94, 54], [97, 44], [103, 46], [101, 55]], C("#6f8696")); B.line(97, 44, 103, 46, C("#cfe6f2"), 1);
-  B.rect(95, 40, 6, 4, C(b.mid)); B.rect(96, 41, 4, 2, C("#14161c")); B.line(97, 44, 96, 46, C(DK), 1); // petits rétros
+  var b = bandsOf("#2a4fa6"), bk = "#12151d", i;
+  B.rect(52, 81, 16, 3, C("#1b1e27")); B.rect(66, 81, 5, 3, C(CH[1]));
+  B.poly([[24, 53], [33, 54], [46, 57], [66, 62], [70, 68], [70, 80], [32, 80], [28, 66]], C(b.mid), gradeFn(53, 80, b)); // queue dressée
+  B.poly([[24, 53], [33, 54], [36, 58], [28, 57]], C(bk));                                  // becquet de queue noir
+  B.rect(24, 54, 7, 2, C("#ff2a2a")); B.rect(24, 56, 2, 4, C("#ff2a2a")); B.px(26, 54, C("#ffb0a8")); // feu en L
+  B.line(34, 56, 44, 54, C(bk), 2); B.line(44, 54, 48, 57, C(bk), 2);                        // poignée anguleuse
+  B.poly([[34, 71], [60, 63], [67, 67], [40, 77]], C(bk));                                  // grande ouïe latérale
+  for (i = 0; i < 4; i++) B.line(38 + i * 6, 74 - i * 2, 44 + i * 6, 68 - i * 2, C(CH[1]), 1);
+  B.line(30, 64, 68, 65, C(b.hi), 1); B.line(33, 78, 69, 76, C(b.lo), 1);
+  B.poly([[36, 55], [40, 50], [48, 50], [50, 54], [66, 58], [68, 62], [40, 62]], C(DK)); B.rect(40, 50, 8, 1, C("#303544")); B.rect(50, 54, 16, 1, C("#303544")); // selle étagée
+  B.rect(68, 77, 20, 3, C(bk)); B.rect(66, 79, 24, 2, C(b.lo));
+  B.poly([[84, 80], [92, 80], [104, 72], [117, 62], [111, 54], [101, 49], [94, 52], [88, 64]], C(b.mid), gradeFn(49, 80, b)); // nez en lame
+  B.poly([[96, 65], [108, 61], [114, 63], [101, 72]], C(bk)); B.line(97, 67, 108, 63, C("#2c4a8a"), 1);        // prise d'air basse
+  B.line(99, 52, 110, 60, C("#fff4c0"), 1); B.line(99, 60, 110, 52, C("#fff4c0"), 1); B.rect(104, 55, 2, 2, C("#ffffff")); // phares en X
+  B.px(112, 62, C("#ff9d2e"));
+  B.poly([[94, 52], [97, 40], [108, 42], [103, 53]], C("#5e7686")); B.line(97, 40, 108, 42, C("#d6eef8"), 1); // pare-brise incliné
+  B.line(99, 46, 96, 40, C(bk), 1); B.poly([[92, 36], [99, 37], [97, 41], [91, 40]], C(b.hi)); B.rect(93, 37, 4, 2, C(bk)); // rétro lame
   B.line(91, 52, 101, 50, C(DK), 2); B.rect(101, 49, 3, 3, C("#0a0b0e"));
-  B.line(102, 58, 97, 80, C(CH[1]), 2);
-  B.line(90, 77, 93, 72, C(b.hi), 2); B.line(93, 72, 99, 70, C(b.hi), 2); B.line(99, 70, 105, 73, C(b.hi), 2); B.line(105, 73, 107, 77, C(b.hi), 2);
-  return { hip: [60, 55], hand: [101, 50], foot: [80, 74], lean: 3, wr: 7, wb: [42, 81], wf: [98, 81], rim: "#aeb4c0", light: [110, 59] };
+  B.line(103, 58, 98, 80, C(CH[1]), 2);
+  B.poly([[91, 77], [94, 71], [103, 68], [112, 69], [105, 73], [99, 72]], C(b.hi), gradeFn(68, 77, b)); // garde-boue en lame
+  return { hip: [60, 55], hand: [101, 50], foot: [80, 74], lean: 3, wr: 7, wb: [42, 81], wf: [98, 81], rim: "#aeb4c0", light: [112, 57] };
 }
 
-/* --- Yamaha TMAX : look de moto, bras oscillant alu apparent, tunnel central sculpté --- */
+/* --- Yamaha TMAX : prédateur noir et rouge, regard en V, bosse centrale, échappement apparent --- */
 function scooterTMAX(B, f) {
-  var b = bandsOf("#5a6273"), dk = bandsOf("#262b38"), bl = "#2b6be0";
-  B.line(42, 81, 66, 74, C(CH[1]), 4); B.line(42, 80, 66, 73, C(CH[0]), 1);               // bras oscillant alu
-  B.rect(50, 81, 16, 3, C(CH[1])); B.rect(50, 81, 16, 1, C(CH[0]));
-  B.rect(26, 60, 9, 5, C(dk.mid)); B.rect(25, 61, 2, 3, C("#e53935"));                    // garde-boue arrière + feu
-  B.poly([[34, 78], [33, 68], [36, 60], [46, 57], [60, 60], [68, 66], [68, 78]], C(b.mid), gradeFn(57, 78, b)); // queue courte
-  B.poly([[62, 60], [72, 54], [84, 58], [86, 78], [66, 78]], C(b.mid), gradeFn(54, 78, b));  // tunnel central relevé
-  B.line(38, 70, 66, 66, C(bl), 1); B.line(66, 66, 84, 64, C(bl), 1);
-  B.rect(40, 74, 24, 4, C(dk.mid));
-  B.poly([[38, 58], [41, 54], [46, 53], [48, 56], [64, 56], [68, 59], [64, 61], [40, 61]], C(DK)); B.rect(48, 56, 16, 1, C("#303544")); // selle plate
-  B.rect(72, 77, 16, 3, C("#14161c")); B.rect(72, 79, 16, 1, C(CH[1]));
-  B.poly([[84, 80], [92, 80], [102, 72], [112, 62], [108, 54], [98, 50], [92, 53], [88, 66]], C(b.mid), gradeFn(50, 80, b)); // façade acérée
-  B.poly([[94, 62], [104, 62], [104, 69], [96, 71]], C("#171a22")); B.line(95, 64, 103, 64, C("#2a2f3c"), 1); B.line(95, 67, 103, 67, C("#2a2f3c"), 1); // grandes entrées d'air
-  B.line(98, 55, 110, 59, C("#f6f2cc"), 1); B.line(97, 58, 108, 62, C("#f6f2cc"), 1);        // phare en V
-  B.line(98, 53, 109, 56, C(bl), 1);
-  B.poly([[94, 53], [98, 40], [106, 42], [102, 54]], C("#4d5d6c")); B.line(98, 40, 106, 42, C("#cfe6f2"), 1);
-  B.rect(95, 42, 5, 3, C(b.hi)); B.rect(96, 43, 3, 1, C("#14161c"));
+  var b = bandsOf("#2e3340"), rd = "#ff3b30", bk = "#0e1016", i;
+  B.line(42, 81, 70, 73, C(CH[1]), 4); B.line(42, 80, 70, 72, C(CH[0]), 1); B.line(46, 83, 70, 76, C(CH[2]), 1); // bras oscillant alu
+  B.line(66, 78, 33, 73, C(CH[1]), 4); B.line(66, 77, 33, 72, C(CH[0]), 1); B.rect(26, 69, 10, 7, C("#3a3f4c")); B.rect(26, 69, 10, 1, C("#7a8296")); B.rect(24, 71, 3, 3, C(bk)); // échappement apparent
+  B.poly([[28, 70], [38, 63], [52, 65], [48, 70]], C(bk));                                   // protège-roue
+  B.poly([[20, 61], [34, 57], [52, 57], [58, 61], [52, 65], [24, 66]], C(b.mid), gradeFn(57, 66, b)); // queue basse
+  B.poly([[20, 56], [30, 55], [31, 59], [24, 60]], C(bk));                                  // aileron arrière
+  B.rect(20, 61, 4, 3, C("#ff2a2a")); B.px(21, 61, C("#ffb0a8"));
+  B.poly([[54, 58], [66, 48], [80, 51], [89, 62], [87, 78], [56, 78]], C(b.mid), gradeFn(48, 78, b)); // bosse centrale
+  for (i = 0; i < 9; i++) for (var j = 0; j < 6; j++) if ((i + j) % 2 === 0) B.px(60 + i * 3, 56 + j * 4, C(bk)); // texture carbone
+  B.line(58, 74, 86, 58, C(rd), 1); B.line(60, 77, 87, 62, C(mix(rd, -0.4)), 1);
+  B.line(66, 49, 80, 52, C(rd), 1);
+  B.poly([[36, 59], [40, 55], [58, 55], [64, 58], [60, 61], [38, 61]], C(DK)); B.rect(40, 55, 18, 1, C("#303544")); // selle plate
+  B.rect(74, 77, 14, 3, C(bk)); B.rect(74, 79, 14, 1, C(rd));
+  B.poly([[84, 80], [92, 80], [106, 74], [119, 64], [112, 53], [100, 47], [94, 51], [88, 64]], C(b.mid), gradeFn(47, 80, b)); // façade de prédateur
+  B.line(92, 73, 113, 60, C(rd), 1); B.line(94, 76, 112, 64, C(mix(rd, -0.4)), 1);
+  B.line(98, 52, 112, 57, C(bk), 2);                                                        // sourcil sombre
+  B.line(98, 55, 111, 59, C("#fff4c0"), 1); B.line(98, 58, 109, 63, C("#fff4c0"), 1); B.px(110, 59, C("#ffffff")); // regard en V
+  B.poly([[96, 65], [109, 63], [113, 66], [101, 73]], C(bk)); for (i = 0; i < 3; i++) B.line(99 + i * 3, 70 - i * 2, 103 + i * 3, 66 - i * 2, C(rd), 1); // grandes entrées d'air
+  B.poly([[90, 58], [99, 53], [99, 58]], C(rd));                                            // ailette
+  B.poly([[94, 51], [99, 41], [109, 44], [104, 53]], C("#3b4856")); B.line(99, 41, 109, 44, C("#c4dcea"), 1); // pare-brise bas et noir
+  B.line(100, 46, 98, 41, C(bk), 1); B.poly([[93, 38], [100, 39], [98, 43], [92, 42]], C(b.hi)); B.rect(94, 39, 4, 2, C(bk));
   B.line(91, 51, 101, 49, C(DK), 2); B.rect(101, 48, 3, 3, C("#0a0b0e"));
-  B.line(103, 57, 98, 80, C(CH[0]), 2);
-  B.line(90, 77, 93, 72, C(b.hi), 2); B.line(93, 72, 99, 69, C(b.hi), 2); B.line(99, 69, 105, 72, C(b.hi), 2);
-  return { hip: [58, 54], hand: [101, 49], foot: [78, 75], lean: 3, wr: 7, wb: [42, 81], wf: [99, 81], rim: "#c9ced8", light: [110, 58] };
+  B.line(104, 57, 98, 80, C(CH[0]), 2); B.line(106, 60, 100, 80, C(rd), 1);
+  B.poly([[92, 76], [96, 69], [106, 66], [118, 68], [108, 72], [100, 71]], C(b.mid), gradeFn(66, 76, b)); B.line(96, 70, 117, 68, C(rd), 1); // garde-boue en bec
+  return { hip: [58, 54], hand: [101, 49], foot: [78, 75], lean: 3, wr: 7, wb: [42, 81], wf: [99, 81], rim: "#c9ced8", light: [113, 59] };
 }
 
 /* --- Yamaha Tracer 7 : sport-tourisme caréné, double phare empilé, bicylindre apparent --- */
@@ -642,7 +649,7 @@ function motoGS(B, f, gold) {
   B.line(88, 40, 101, 38, C(DK), 2); B.rect(101, 37, 3, 3, C("#0a0b0e")); B.rect(103, 33, 2, 8, C(DK)); // guidon + protège-mains
   B.line(98, 50, 105, 80, C(metal[0]), 3);
   B.rect(66, 74, 5, 2, C(metal[1]));
-  return { hip: [54, 46], hand: [101, 39], foot: [69, 73], lean: 5, wr: 8, wb: [46, 80], wf: [105, 80], rim: gold ? "#ffd75a" : "#c9ced8", light: [109, 52] };
+  return { hip: [54, 46], hand: [101, 39], foot: [69, 73], lean: 5, wr: 8, wb: [46, 80], wf: [105, 80], rim: gold ? "#ffd75a" : "#c9ced8", light: [109, 52], pillion: { hip: [41, 46], foot: [59, 72] } };
 }
 var VEHICLES = [
   { n: "SYM GTS", draw: function (B, f) { return scooterSYM(B, f); } },
@@ -730,6 +737,7 @@ function drawRider(B, an, o, tr, f) {
     B.line(neck[0] + 2, neck[1] + 4, hip[0] + 4, hip[1] - 3, C("#7c8494"), 1);
     B.rect(neck[0] - 2, neck[1] + 1, 6, 2, C(mix(vest, 0.3)));
     B.rect(hip[0] - 3, hip[1] - 4, wh + 1, 2, C(vestL));
+    if (M >= 2) { B.rect(neck[0] - 1, neck[1] + 3, 4, 6, C("#e8eaf0")); B.rect(neck[0], neck[1] + 4, 1, 4, C("#c8ccd6")); }
   }
   /* cou */
   B.rect(neck[0] - 1, neck[1] - 2, 4, 5, C(skinD));
@@ -775,29 +783,37 @@ function drawRider(B, an, o, tr, f) {
   var al1 = Math.max(12, bd / 2 + 0.8), elbow = ik(shoulder, hd, al1, al1, 1);
   var uw = 4 + M * 0.6, fw = 3 + M * 0.5;
   uw = Math.round(uw); fw = Math.round(fw);
-  var sleeveOn = M <= 3, tornSleeve = M === 4;
+  var tornSleeve = M === 4, wrp = lerp(elbow, hd, 0.8);
   B.line(shoulder[0], shoulder[1], elbow[0], elbow[1], C(skin), uw);
   B.line(elbow[0], elbow[1], hd[0], hd[1], C(skin), fw);
-  if (M >= 3) { // biceps / avant-bras (reflet)
-    var bc = lerp(shoulder, elbow, 0.55), fl = (Math.floor(f / 2) % 2) && M >= 4 ? 1 : 0;
-    B.disc(bc[0], bc[1] - 1 - fl, 1.8 + (M - 3) * 0.7, C(skin), function (x, y) { return y < bc[1] - 1 - fl ? C(skinH) : C(skin); });
-    B.line(elbow[0], elbow[1] - 1, hd[0] - 3, hd[1] - 1, C(skinH), 1);
-  }
-  if (sleeveOn) {
+  if (M >= 2) B.line(elbow[0] + 1, elbow[1] - 1, hd[0] - 3, hd[1] - 1, C(skinH), 1);
+  if (M <= 1) {                                   // manches longues jusqu'au poignet
     B.line(shoulder[0], shoulder[1], elbow[0], elbow[1], C(vest), uw + 1);
-    var wr = lerp(elbow, hd, 0.8);
-    B.line(elbow[0], elbow[1], wr[0], wr[1], C(vest), fw + 1);
+    B.line(elbow[0], elbow[1], wrp[0], wrp[1], C(vest), fw + 1);
     B.line(shoulder[0], shoulder[1] - 1, elbow[0], elbow[1] - 1, C(vestH), 1);
-    B.rect(wr[0] - 1, wr[1] - Math.round(fw / 2) - 1, 3, fw + 2, C(mix(vest, 0.3)));
+  } else if (M === 2) {                           // manches retroussées au coude
+    B.line(shoulder[0], shoulder[1], elbow[0], elbow[1], C(vest), uw + 1);
+    B.line(shoulder[0], shoulder[1] - 1, elbow[0], elbow[1] - 1, C(vestH), 1);
+    B.rect(elbow[0] - 1, elbow[1] - Math.round(uw / 2) - 1, 3, uw + 2, C(mix(vest, 0.34)));
+  } else if (M === 3) {                           // manches coupées court, gros biceps
+    var cut3 = lerp(shoulder, elbow, 0.36);
+    B.line(shoulder[0], shoulder[1], cut3[0], cut3[1], C(vest), uw + 1);
+    B.rect(cut3[0], cut3[1] - Math.round(uw / 2) - 1, 2, uw + 2, C(mix(vest, 0.34)));
   } else if (tornSleeve) {
     var cut = lerp(shoulder, elbow, 0.5);
     B.line(shoulder[0], shoulder[1], cut[0], cut[1], C(vest), uw + 1);
-    for (var r = 0; r < 4; r++) B.px(cut[0] + 1 + r % 2, cut[1] + uw / 2 + (r % 2), C(vest));
+    for (var r2 = 0; r2 < 4; r2++) B.px(cut[0] + 1 + r2 % 2, cut[1] + uw / 2 + (r2 % 2), C(vest));
     var sw3 = Math.round(Math.sin(f * 1.1) * 1);
     B.rect(cut[0] + 2, cut[1] + uw / 2 + 1 + sw3, 3, 1, C(vestL));
   }
-  if (G >= 2) { var wp = lerp(elbow, hd, 0.86); B.rect(wp[0] - 1, wp[1] - 2, G >= 4 ? 4 : 3, G >= 4 ? 4 : 3, C(G >= 4 ? "#ffe27a" : "#f7c948")); B.px(wp[0], wp[1] - 1, C("#8a5a05")); }
+  if (M >= 3) {                                   // biceps qui gonflent
+    var bc = lerp(shoulder, elbow, 0.6), fl = (Math.floor(f / 2) % 2) ? 1 : 0;
+    B.disc(bc[0], bc[1] - 1 - fl, 1.8 + (M - 2) * 0.7, C(skin), function (x, y) { return y < bc[1] - 1 - fl ? C(skinH) : C(skin); });
+  }
+  if (M >= 1 && M <= 3) B.rect(wrp[0] - 1, wrp[1] - Math.round(fw / 2) - 1, 3, fw + 2, C("#f4f6fa"));  // bracelets blancs
+  if (G >= 2) { var wp = lerp(elbow, hd, 0.9); B.rect(wp[0] - 1, wp[1] - 2, G >= 4 ? 4 : 3, G >= 4 ? 4 : 3, C(G >= 4 ? "#ffe27a" : "#f7c948")); B.px(wp[0], wp[1] - 1, C("#8a5a05")); }
   B.rect(hd[0] - 1, hd[1] - 2, 5, 5, C(skin)); B.rect(hd[0] + 2, hd[1] - 2, 1, 5, C(skinD));
+
   /* chapeau de diplômé, de plus en plus gros et doré */
   if (S >= 1) {
     var w = 9 + 3 * S, cx = hx + 1, yb = hy - 10;
@@ -815,6 +831,154 @@ function drawRider(B, an, o, tr, f) {
     }
   }
   return { head: [hx, hy], shoulder: shoulder, elbow: elbow, hand: hd, S: S, capY: hy - 10 };
+}
+
+
+/* ===== Passagère (richesse 4 et 5) ===== */
+var HEART = [".x.x.", "xxxxx", "xxxxx", ".xxx.", "..x.."];
+function drawPassenger(B, an, G, f) {
+  var P = an.pillion; if (!P || G < 4) return null;
+  var five = G >= 5;
+  var skin = "#f6d2a8", skinD = mix(skin, -0.2), skinH = mix(skin, 0.15);
+  var hair = five ? "#f1cf72" : "#4a2f22", hairH = five ? "#fff2c0" : "#7d563a";
+  var jac = five ? "#f4e4ae" : "#8e1f3d", jacH = mix(jac, 0.3), jacL = mix(jac, -0.3);
+  var pants = five ? "#171922" : "#4a6fa5", boot = five ? "#f2b631" : "#ecf0f5";
+  var hel = five ? { hi: "#ffffff", mid: "#f7ecc0", lo: "#cdbb7a" } : { hi: "#ffffff", mid: "#ecf0f5", lo: "#a9b4c6" };
+  var trim = five ? "#f2b631" : "#ff6fa5", lip = five ? "#e0245e" : "#d0505e";
+  var hip = P.hip, foot = P.foot, i;
+  var sh = [hip[0] + 3, hip[1] - 13], hd = [sh[0] + 2, sh[1] - 8], hx = Math.round(hd[0]), hy = Math.round(hd[1]);
+  /* cheveux longs au vent */
+  var len = five ? 15 : 11;
+  for (i = 0; i < len; i++) {
+    var wy = Math.round(Math.sin((i + f * 1.2) * 0.6) * (0.6 + i * 0.07));
+    B.rect(hx - 6 - i, hy + 1 + wy + Math.floor(i / 5), 1, five ? 5 : 3, C(i % 3 === 0 ? hairH : hair));
+  }
+  /* jambe */
+  var dist = Math.sqrt(Math.pow(foot[0] - hip[0], 2) + Math.pow(foot[1] - hip[1], 2)), ll = Math.max(12, dist / 2 + 2.2), knee = ik(hip, foot, ll, ll, -1);
+  B.line(hip[0], hip[1], knee[0], knee[1], C(pants), 5); B.line(knee[0], knee[1], foot[0], foot[1] - 2, C(pants), 4);
+  B.line(hip[0] + 1, hip[1] - 2, knee[0], knee[1] - 2, C(mix(pants, 0.3)), 1);
+  B.rect(foot[0] - 2, foot[1] - 3, 7, 5, C(boot)); B.rect(foot[0] - 2, foot[1] + 1, 7, 1, C(mix(boot, -0.35))); B.rect(foot[0] - 2, foot[1] - 3, 7, 1, C(mix(boot, 0.35)));
+  /* buste */
+  B.poly([[hip[0] - 4, hip[1] + 1], [sh[0] - 5, sh[1] + 2], [sh[0] - 2, sh[1] - 1], [sh[0] + 3, sh[1] + 1], [hip[0] + 3, hip[1] + 1]], C(jac), function (x, y) { return x <= sh[0] - 2 - (hip[1] - y) * 0.1 ? C(jacL) : (y < sh[1] + 3 ? C(jacH) : C(jac)); });
+  B.line(sh[0] + 1, sh[1] + 2, hip[0] + 2, hip[1] - 1, C(five ? "#f2b631" : "#cfd3dc"), 1);
+  B.rect(hip[0] - 3, hip[1] - 1, 7, 2, C(five ? "#f2b631" : "#2a2d38"));
+  if (five) { B.px(sh[0] - 1, sh[1] + 5, C("#f2b631")); B.px(sh[0] - 1, sh[1] + 8, C("#f2b631")); }
+  /* cou et collier */
+  B.rect(hx - 1, hy + 4, 3, 4, C(skinD));
+  if (five) { B.rect(hx - 1, hy + 7, 4, 1, C("#f2b631")); B.px(hx + 1, hy + 8, C("#ffe27a")); }
+  /* visage */
+  B.disc(hx, hy, 5, C(skin));
+  B.px(hx + 2, hy + 1, C("#ffffff")); B.px(hx + 2, hy + 2, C("#ffffff")); B.px(hx + 3, hy + 1, C("#2a2d3a")); B.px(hx + 3, hy + 2, C("#2a2d3a"));
+  B.px(hx + 2, hy, C("#16162a")); B.px(hx + 3, hy, C("#16162a")); if (five) B.px(hx + 4, hy + 1, C("#16162a"));
+  B.px(hx + 5, hy + 2, C(skinD)); B.rect(hx + 2, hy + 4, 3, 1, C(lip)); if (five) B.px(hx + 3, hy + 5, C(mix(lip, 0.3)));
+  B.px(hx + 1, hy + 3, C(mix("#ff8aa0", five ? 0.2 : 0))); B.px(hx - 3, hy + 2, C(skinD));
+  if (five) { B.px(hx - 2, hy + 3, C("#f2b631")); B.px(hx - 2, hy + 4, C("#ffe27a")); }
+  /* casque */
+  B.disc(hx, hy - 1, 6, 0, function (x, y) {
+    if (y > hy) return 0;
+    var t = (y - (hy - 7)) / 8;
+    if (t > 0.35 && t < 0.55) return C(trim);
+    return C(t < 0.22 ? hel.hi : (t > 0.8 ? hel.lo : hel.mid));
+  });
+  B.rect(hx - 6, hy - 1, 3, 5, C(hair)); B.rect(hx - 5, hy + 3, 3, 3, C(hair));
+  B.rect(hx + 3, hy - 3, 4, 2, C("#2a2d3a")); B.rect(hx - 5, hy, 11, 1, C(hel.lo));
+  B.px(hx - 2, hy - 6, C("#ffffff")); B.px(hx - 1, hy - 6, C(mix(hel.mid, 0.6)));
+  return { sh: sh, hd: hd, five: five, jac: jac, jacH: jacH, skin: skin, trim: trim };
+}
+function drawPassengerArms(B, pr, an) {
+  if (!pr) return;
+  var s = [pr.sh[0] + 1, pr.sh[1] + 3], t = [an.hip[0] + 3, an.hip[1] - 6];
+  var el = ik(s, t, 8, 8, 1);
+  B.line(s[0], s[1], el[0], el[1], C(pr.jac), 3); B.line(el[0], el[1], t[0], t[1], C(pr.jac), 3);
+  B.line(s[0], s[1] - 1, el[0], el[1] - 1, C(pr.jacH), 1);
+  B.rect(t[0] - 1, t[1] - 1, 3, 3, C(pr.skin));
+  if (pr.five) B.px(el[0] + 3, el[1] + 1, C("#f2b631"));
+}
+function drawLoveFx(B, pr, f) {
+  if (!pr) return;
+  var n = pr.five ? 4 : 2, i, k;
+  for (i = 0; i < n; i++) {
+    var age = (f + i * 5) % 16; if (age > 13) continue;
+    var hx = pr.hd[0] - 14 - i * 6 + Math.round(Math.sin(age * 0.5 + i) * 2), hy = pr.hd[1] - 6 - age;
+    for (var j = 0; j < HEART.length; j++) for (k = 0; k < HEART[j].length; k++) if (HEART[j][k] === "x") B.px(hx + k, hy + j, C(pr.five ? "#ff5a9a" : "#ff8fb5"));
+    B.px(hx + 1, hy + 1, C("#ffffff"));
+  }
+  if (pr.five) for (i = 0; i < 5; i++) {
+    var a2 = (f * 2 + i * 7) % 14; if (a2 > 10) continue;
+    var sx = pr.hd[0] - 8 + i * 4, sy = pr.hd[1] + 14 - a2;
+    B.px(sx, sy, C("#fff6c0")); B.px(sx - 1, sy, C("#ffd75a")); B.px(sx + 1, sy, C("#ffd75a")); B.px(sx, sy - 1, C("#ffd75a")); B.px(sx, sy + 1, C("#ffd75a"));
+  }
+}
+
+/* ===== Intelligence : symboles, ampoule, toge, diplôme, hologramme boursier ===== */
+var GLYPHS = {
+  S: ["xxxxx", ".x...", "..x..", ".x...", "xxxxx"],
+  P: ["x...x", "...x.", "..x..", ".x...", "x...x"],
+  E: ["..xxx", ".x...", "xxxx.", ".x...", "..xxx"],
+  PI: ["xxxxx", ".x.x.", ".x.x.", ".x.x.", ".x..x"]
+};
+var REAR = [[27, 57], [34, 60], [36, 60], [34, 58], [27, 52], [27, 52]];
+function drawGlyph(B, g, x, y, col) {
+  for (var j = 0; j < g.length; j++) for (var i = 0; i < g[j].length; i++) if (g[j][i] === "x") B.px(x + i, y + j, C(col));
+}
+function drawDiploma(B, p, f, gold) {
+  var x = p[0], y = p[1], sw = Math.round(Math.sin(f * 0.8)), cream = gold ? "#f4dc94" : "#f1ead2";
+  B.rect(x, y - 12, 4, 12, C(cream)); B.rect(x, y - 12, 1, 12, C(mix(cream, -0.1))); B.rect(x + 3, y - 12, 1, 12, C(mix(cream, -0.2)));
+  B.rect(x - 1, y - 12, 6, 2, C(mix(cream, -0.08))); B.rect(x - 1, y - 2, 6, 2, C(mix(cream, -0.08)));
+  B.rect(x, y - 8, 4, 2, C("#d6282e"));
+  B.rect(x + 1 + sw, y - 6, 1, 6, C("#d6282e")); B.px(x + 1 + sw, y + 1, C("#a81c22"));
+  if (gold) { B.px(x + 1, y - 10, C("#ffe27a")); B.px(x + 2, y - 4, C("#ffe27a")); }
+}
+function drawGown(B, an, S, f) {
+  var hip = an.hip, sh = [hip[0] + an.lean, hip[1] - 16], gold = S >= 5, i, y;
+  for (i = 0; i < 26; i++) {
+    var x = sh[0] - 4 - i, w1 = Math.sin(i * 0.45 - f * 0.9), w2 = Math.sin(i * 0.4 - f * 0.9 + 1.2);
+    var top = sh[1] + 1 + Math.round(w1 * (0.6 + i * 0.1)) + Math.floor(i * 0.2);
+    var bot = sh[1] + 14 + Math.round(w2 * (0.8 + i * 0.14)) + Math.floor(i * 0.3);
+    for (y = top; y <= bot; y++) {
+      var fold = ((i + (y - top)) % 6 < 2);
+      var c = y === top ? "#6572c4" : (y === bot ? (gold ? "#f2b631" : "#4a579c") : (fold ? "#3a4585" : "#2a3260"));
+      B.px(x, y, C(c));
+    }
+    if (gold && i % 2 === 0) B.px(x, bot - 1, C("#ffe27a"));
+  }
+}
+function drawBrainFx(B, rp, an, S, f) {
+  if (S < 2) return;
+  var i, hx = rp.head[0], hy = rp.head[1], gold = S >= 5;
+  var keys = ["S", "P", "E", "PI"], n = S >= 4 ? 4 : S;
+  for (i = 0; i < n; i++) {
+    var age = (f + i * 11) % 44, gx = hx - 12 - age, gy = hy - 10 + i * 7 + Math.round(Math.sin(age * 0.25 + i) * 2);
+    drawGlyph(B, GLYPHS[keys[i]], gx, gy, gold ? (age < 30 ? "#ffd75a" : "#a8832a") : (age < 30 ? "#9fe8ff" : "#4e8da0"));
+  }
+  if (S >= 3) {
+    var bx = hx + 1 + Math.floor((9 + 3 * S) / 2) + 6, by = hy - 14, on = (f % 6) < 4, k;
+    if (on) for (var gy2 = by - 7; gy2 <= by + 7; gy2++) for (var gx2 = bx - 7; gx2 <= bx + 7; gx2++) { var dd = Math.sqrt((gx2 - bx) * (gx2 - bx) + (gy2 - by) * (gy2 - by)); if (dd > 3.5 && dd < 7 && ((gx2 + gy2) % 2 === 0)) B.px(gx2, gy2, C(dd < 5 ? "#8a7a30" : "#4f4a22")); }
+    B.disc(bx, by, 4, C("#2a2410")); B.disc(bx, by, 3, C(on ? "#ffe066" : "#d9bb55")); B.px(bx - 1, by - 1, C("#fffbd0"));
+    B.rect(bx - 1, by + 4, 3, 1, C("#9aa0aa")); B.px(bx, by + 5, C("#6b7080"));
+    if (on) [[0, -7], [-6, -3], [6, -3], [-7, 1], [7, 1]].forEach(function (d2) { B.px(bx + d2[0], by + d2[1], C("#ffd75a")); });
+  }
+  if (S >= 5) {
+    var cx = hx + 1, cy = hy - 11, hw = Math.floor((9 + 3 * S) / 2) + 3, kk;
+    for (kk = 0; kk < 28; kk++) if ((kk + f) % 2 === 0) B.px(cx + Math.cos(kk / 28 * 6.2832) * hw, cy + Math.sin(kk / 28 * 6.2832) * 6 - 1, C("#ffd75a"));
+  }
+}
+
+function drawSportFx(B, rp, M, f) {
+  if (M < 2) return;
+  var hx = rp.head[0], hy = rp.head[1], k;
+  for (k = 0; k < 2; k++) {
+    var age = (f + k * 4) % 9; if (age > 6) continue;
+    var dx = k ? hx - 8 : hx + 8, dy = hy - 6 + age;
+    B.px(dx, dy, C("#bfe9ff")); B.px(dx, dy + 1, C("#6fc3f0"));
+  }
+  if (M >= 3) {
+    var bc = lerp(rp.shoulder, rp.elbow, 0.6), on = (f % 4) < 2;
+    [[-5, -6], [5, -7], [0, -9]].forEach(function (o, i) {
+      var x = bc[0] + o[0], y = bc[1] + o[1], c = C(on ? "#ffe27a" : "#ff9d2e");
+      B.px(x, y, c); if (on || i === 1) { B.px(x - 1, y, c); B.px(x + 1, y, c); B.px(x, y - 1, c); B.px(x, y + 1, c); }
+    });
+  }
 }
 
 function renderFrame(out, frame, o, tr, anim) {
@@ -839,8 +1003,13 @@ function renderFrame(out, frame, o, tr, anim) {
   for (var gy = ly - 7; gy <= ly + 7; gy++) for (var gx = lx - 7; gx <= lx + 7; gx++) { var dd = Math.sqrt((gx - lx) * (gx - lx) + (gy - ly) * (gy - ly)); if (dd < 7 && ((gx + gy) % 2 === 0) && dd > 2) bl.px(gx, gy, C(dd < 4.5 ? "#d9c98a" : "#7d7348")); }
   blit(out, bl, 0);
   outlineSel(W, true); blit(out, W, 0);
+  if (tr.etude >= 4) drawDiploma(B, REAR[G] || [30, 52], f, tr.etude >= 5);
+  var pass = drawPassenger(B, an, G, f);
   var rp = drawRider(B, an, o, tr, f);
+  drawPassengerArms(B, pass, an);
   outlineSel(B, true);
+  drawBrainFx(B, rp, an, tr.etude, f);
+  drawSportFx(B, rp, tr.sport, f);
   // éclats d’or (richesse élevée) et chapeau doré
   if (G >= 4 || tr.etude >= 5) {
     [[26, 50, 0], [112, 36, 3], [124, 60, 6], [18, 70, 9], [70, 30, 5]].forEach(function (c, k) {
@@ -858,6 +1027,7 @@ function renderFrame(out, frame, o, tr, anim) {
       B.rect(px2, py2, 2 + (i % 2), 1, C(i % 3 ? "#15171d" : "#262a35"));
     }
   }
+  drawLoveFx(B, pass, f);
   blit(out, B, bob);
   // pot d’échappement : fumée
   for (var k = 0; k < 3; k++) {
@@ -867,6 +1037,7 @@ function renderFrame(out, frame, o, tr, anim) {
   // halo or sous la moto en or
   if (G >= 5) { var UG = new Layer(); for (var ux = 26; ux < 118; ux++) if (((ux + f) % 3) !== 0) UG.px(ux, 89, C("#f7c948")); blit(out, UG, 0); }
 }
+
 
 function fmt(h) {
   var hh = Math.floor(h), mm = Math.round((h - hh) * 60);
