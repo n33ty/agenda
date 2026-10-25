@@ -1404,8 +1404,18 @@ function timeAsHours(value) {
   var m = /^(\d{2}):(\d{2})$/.exec(value || "");
   return m ? (+m[1] + (+m[2] / 60)) : null;
 }
+function isoWeekNumber(iso) {
+  var p = dateParts(iso); if (!p) return null;
+  var d = new Date(Date.UTC(p.y, p.mo, p.d));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
 function uclBlocksForWeek(i) {
-  return uclCourses.filter(function (c) { return weekIndexForDate(c.date) === i; }).map(function (c) {
+  return uclCourses.filter(function (c) {
+    var n = isoWeekNumber(c.date);
+    return weekIndexForDate(c.date) === i && n !== null && n >= 3;
+  }).map(function (c) {
     return { id: "ucl-" + c.uid, day: dayIndexForDate(c.date), start: timeAsHours(c.start), end: timeAsHours(c.end),
       type: "cours", title: c.title || "Cours UCLouvain", location: c.location || "", teacher: c.teacher || "",
       courseCode: c.courseCode || "", date: c.date, imported: true, done: false };
@@ -1414,11 +1424,16 @@ function uclBlocksForWeek(i) {
 function getBlocks(i) {
   var w = state.weeks[i];
   var base = (w && w.blocks) ? w.blocks.slice() : defaultBlocks(i);
+  var ws = weekStart(i);
+  var iso = ws.getFullYear() + "-" + String(ws.getMonth() + 1).padStart(2, "0") + "-" + String(ws.getDate()).padStart(2, "0");
+  var weekNo = isoWeekNumber(iso);
+  // Conserver intégralement les semaines ISO 1 et 2. Dès la semaine ISO 3,
+  // le calendrier UCLouvain devient la source des cours et remplace les cours locaux.
+  if (weekNo !== null && weekNo >= 3) base = base.filter(function (b) { return b.type !== "cours"; });
   var imported = uclBlocksForWeek(i);
-  if (!imported.length) return base;
-  var ids = {};
-  base.forEach(function (b) { ids[b.id] = true; });
-  imported.forEach(function (b) { if (!ids[b.id]) base.push(b); });
+  imported.forEach(function (b) {
+    if (!base.some(function (existing) { return existing.id === b.id; })) base.push(b);
+  });
   return base;
 }
 function loadUclCalendar() {
