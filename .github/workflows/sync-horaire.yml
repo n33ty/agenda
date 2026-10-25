@@ -1,0 +1,40 @@
+
+name: Synchroniser horaire UCLouvain
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-calendar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Télécharger le calendrier
+        env:
+          UCL_CALENDAR_URL: ${{ secrets.UCL_CALENDAR_URL }}
+        run: |
+          set -e
+          test -n "$UCL_CALENDAR_URL"
+          curl --fail --location --silent --show-error \
+            "$UCL_CALENDAR_URL" -o horaire.ics
+          grep -q "BEGIN:VCALENDAR" horaire.ics
+
+      - name: Enregistrer les changements
+        run: |
+          git add horaire.ics
+          if git diff --cached --quiet; then
+            echo "Le calendrier n'a pas changé."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Mise à jour automatique de l'horaire"
+          git push
